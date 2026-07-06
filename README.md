@@ -1,2 +1,0 @@
-# eube-quiz
-eube quiz
