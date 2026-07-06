@@ -1083,14 +1083,70 @@ function renderResult2(s,pi,P,f,ctaLabel){
   document.getElementById("restart2").onclick=function(){state={step:0,name:"",whatsapp:"",email:"",answers:{}};quizSid=uuid();go(0);};
 }
 
+// ── Endpoint de captura (Apps Script Web App) ──
+// Cole aqui a URL /exec que o Apps Script gerar no deploy.
+var EUBE_ENDPOINT = "https://script.google.com/macros/s/AKfycbxQIiW0i6Jpk4XY6cK2ZohfDCjeUBzNmUgkz39gVDam5TqDs0gbta1gHfyiyCBnSAbXbg/exec";
+
+function eubeParam(name){
+  try{ return new URLSearchParams(window.location.search).get(name) || ""; }catch(e){ return ""; }
+}
+
+// converte a resposta salva (índice ou array) no texto legível da opção
+function respostaTexto(qid){
+  var q=qById(qid); if(!q) return "";
+  var a=state.answers[qid]; if(a==null) return "";
+  if(q.type==="multi"){
+    if(!a.length) return "";
+    return a.map(function(k){return q.opts[k]?q.opts[k].label:"";}).filter(Boolean).join(" | ");
+  }
+  return q.opts[a]?q.opts[a].label:"";
+}
+
 function logResult(){
   var s=scores();
   var FLAB=["acne ativa","transição","mancha antiga","prevenção"];
   var corLab=["marrom","avermelhada","acinzentada","misto"];
-  console.log("EUBE IRE®",{sid:quizSid,name:state.name,email:state.email,wa:state.whatsapp,
-    R:s.R,M:s.M,C:s.C,ire:s.ire,profile:PROFILES[bnd(s.ire)].name,
-    fase:FLAB[fase()],dor:state.answers.k3,cor:(state.answers.cor!=null?corLab[state.answers.cor]:null),
-    answers:state.answers});
+
+  var respostas={};
+  ["k1","k2","k3","r1","r2","m1","cor","m2","c1","c2","h1","fase"].forEach(function(id){
+    respostas[id]=respostaTexto(id);
+  });
+
+  var payload={
+    quiz_sid:quizSid,
+    nome:state.name,
+    whatsapp:state.whatsapp,
+    email:state.email,
+    ire:s.ire,
+    perfil:PROFILES[bnd(s.ire)].name,
+    reatividade:s.R,
+    melanina:s.M,
+    ciclo:s.C,
+    fase:FLAB[fase()],
+    dor_principal:(state.answers.k3!=null?respostaTexto("k3"):""),
+    cor_mancha:(state.answers.cor!=null?corLab[state.answers.cor]:""),
+    respostas:respostas,
+    utm_source:eubeParam("utm_source"),
+    utm_campaign:eubeParam("utm_campaign"),
+    utm_medium:eubeParam("utm_medium"),
+    fbclid:eubeParam("fbclid"),
+    page_url:(function(){try{return window.location.href;}catch(e){return "";}})()
+  };
+
+  // log local pra debug
+  try{ console.log("EUBE IRE®",payload); }catch(e){}
+
+  // envia pro Apps Script (no-cors: não bloqueia o fluxo se falhar)
+  if(EUBE_ENDPOINT && EUBE_ENDPOINT.indexOf("COLE_A_URL")===-1){
+    try{
+      fetch(EUBE_ENDPOINT,{
+        method:"POST",
+        mode:"no-cors",
+        headers:{"Content-Type":"text/plain;charset=utf-8"},
+        body:JSON.stringify(payload)
+      }).catch(function(){});
+    }catch(e){}
+  }
 }
 
 go(0);
