@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EUBE — Diagnóstico IRE®</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sulphur+Point:wght@300;400;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --vinho:#621513;--vinho-deep:#48100f;--terracota:#F4633A;
+  --offwhite:#EDEBDC;--agua:#A4C9CB;--wa:#25D366;
+  --muted:rgba(98,21,19,.5);--line:rgba(98,21,19,.12);
+  --card:rgba(98,21,19,.04);--agua-dim:rgba(164,201,203,.15);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Jost',sans-serif;background:var(--offwhite);
+  color:var(--vinho);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:52px 22px 80px;-webkit-font-smoothing:antialiased}
+.wrap{width:100%;max-width:560px}
+
+/* topbar */
+.topbar{margin-bottom:32px}
+.etapa-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.etapa{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--vinho);font-weight:600}
+.etapa-n{font-size:.68rem;color:rgba(98,21,19,.45);font-weight:400}
+.pbar{height:2px;background:var(--line)}.pfill{height:2px;background:var(--vinho);width:0;transition:width .5s cubic-bezier(.2,.7,.3,1)}
+
+/* type */
+.eyebrow{font-size:.7rem;letter-spacing:.26em;text-transform:uppercase;font-weight:600;margin-bottom:20px}
+.eyebrow-ora{color:var(--terracota);position:relative;padding-bottom:14px;display:inline-block}
+.eyebrow-ora:after{content:"";position:absolute;left:0;bottom:0;width:32px;height:2px;background:var(--terracota)}
+.eyebrow-agua{color:var(--vinho)}
+h1{font-family:'Sulphur Point',sans-serif;font-weight:700;font-size:2.5rem;line-height:1.16;margin-bottom:18px;color:var(--vinho)}
+h2{font-family:'Sulphur Point',sans-serif;font-weight:700;font-size:1.85rem;line-height:1.12;margin-bottom:14px;color:var(--vinho)}
+.hl{color:var(--vinho)}
+.hl-ora{color:var(--terracota)}
+.h1-sub{display:block;font-family:'Jost',sans-serif;font-weight:300;font-size:1.35rem;line-height:1.3;color:rgba(98,21,19,.6);margin-top:16px}
+.lead{font-size:1.08rem;line-height:1.6;color:rgba(98,21,19,.72);margin-bottom:12px;font-weight:300}
+.proof{font-size:.9rem;color:var(--vinho);font-weight:500;margin-bottom:28px}
+.qtext{font-family:'Sulphur Point',sans-serif;font-weight:700;font-size:1.55rem;line-height:1.18;margin-bottom:8px;color:var(--vinho)}
+.qhelp{font-size:.93rem;color:rgba(98,21,19,.5);margin-bottom:20px;font-weight:300}
+
+/* buttons */
+.cta{display:inline-block;width:100%;text-align:center;cursor:pointer;background:var(--terracota);color:var(--offwhite);
+  border:none;border-radius:0;font-family:'Jost',sans-serif;font-weight:600;font-size:1.05rem;letter-spacing:.01em;
+  padding:18px 24px;transition:transform .12s,filter .15s;margin-top:4px}
+.cta:hover{filter:brightness(1.08)}.cta:active{transform:translateY(1px)}.cta:disabled{opacity:.38;cursor:not-allowed}
+.cta-sec{background:transparent;border:1.5px solid var(--terracota);color:var(--terracota)}
+.cta-sec:hover{background:var(--terracota);color:var(--offwhite)}
+
+/* options */
+.opt{display:block;width:100%;text-align:left;cursor:pointer;border-radius:0;background:rgba(98,21,19,.03);color:var(--vinho);
+  border:1.5px solid var(--line);font-family:'Jost',sans-serif;font-weight:400;font-size:1.02rem;
+  line-height:1.32;padding:14px 16px;margin-bottom:9px;transition:border-color .15s,background .15s,color .15s}
+.opt:hover{border-color:var(--vinho);background:rgba(98,21,19,.06)}
+.opt.sel{background:var(--vinho);border-color:var(--vinho);color:var(--offwhite);font-weight:500}
+.opt .chk{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;
+  border:1.5px solid var(--muted);margin-right:12px;vertical-align:-2px;flex-shrink:0;transition:all .15s}
+.opt.sel .chk{background:var(--offwhite);border-color:var(--offwhite)}
+.opt.sel .chk:after{content:"✓";font-size:.7rem;color:var(--vinho)}
+
+/* nav */
+.nav{display:flex;align-items:center;gap:14px;margin-top:22px}.nav .cta{flex:1;margin-top:0}
+.back{background:none;border:none;color:rgba(98,21,19,.5);cursor:pointer;font-family:'Jost',sans-serif;
+  font-size:.93rem;padding:8px 4px;white-space:nowrap}
+.back:hover{color:var(--vinho)}
+
+/* fields */
+.field{margin-bottom:14px}
+.field label{display:flex;align-items:center;gap:8px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--vinho);margin-bottom:7px;font-weight:600}
+.field .opt2{font-size:.7rem;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400}
+.field input{width:100%;background:#fff;border:1.5px solid var(--line);border-radius:0;color:var(--vinho);
+  font-family:'Jost',sans-serif;font-size:1.05rem;padding:13px 15px;transition:border-color .15s}
+.field input::placeholder{color:rgba(98,21,19,.28)}.field input:focus{outline:none;border-color:var(--vinho)}
+.err{color:var(--terracota);font-size:.83rem;margin-top:6px;min-height:1em}
+.privacy{font-size:.79rem;color:var(--muted);line-height:1.45;margin-top:14px;font-weight:300}
+
+/* hero photo slot */
+.hero-photo{position:relative;width:100%;max-width:180px;aspect-ratio:1/1;border:1.5px solid var(--line);
+  background:rgba(98,21,19,.04);
+  display:flex;align-items:center;justify-content:center;margin:28px auto 32px;overflow:hidden}
+.hero-photo:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 12px,rgba(98,21,19,.02) 12px,rgba(98,21,19,.02) 24px)}
+.hp-label{position:relative;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
+.hp-ic{width:20px;height:20px;border:1.5px solid var(--muted);display:inline-block;position:relative;flex:0 0 20px}
+.hp-ic:after{content:"";position:absolute;left:3px;bottom:3px;width:7px;height:7px;border-radius:50%;border:1.5px solid var(--muted)}
+
+/* before/after slot */
+.ba-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+.ba-slot{position:relative;aspect-ratio:3/4;border:1.5px solid var(--line);background:rgba(98,21,19,.03);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;overflow:hidden}
+.ba-slot:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(98,21,19,.015) 10px,rgba(98,21,19,.015) 20px)}
+.ba-label{position:relative;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ba-tag{position:absolute;bottom:10px;left:10px;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--terracota);color:var(--offwhite);padding:3px 8px;font-weight:600}
+.ba-tag-a{background:var(--vinho);color:var(--offwhite)}
+
+/* interstitial */
+.inter{padding:18px 0}
+.inter-h{font-family:'Sulphur Point',sans-serif;font-weight:700;font-size:1.75rem;line-height:1.14;margin-bottom:18px;color:var(--vinho)}
+.inter-p{font-size:1.04rem;line-height:1.58;color:rgba(98,21,19,.72);font-weight:300;margin-bottom:14px}
+.inter-hl{font-size:1.04rem;line-height:1.5;color:var(--vinho);font-weight:600;margin:18px 0 28px;padding-left:14px;border-left:2px solid var(--vinho)}
+.quote{border-left:2px solid var(--line);padding:12px 0 12px 16px;margin:0 0 26px;font-size:.98rem;line-height:1.5;font-weight:300;color:rgba(98,21,19,.72);font-style:italic}
+.quote span{display:block;font-style:normal;font-size:.82rem;color:var(--vinho);margin-top:8px;font-weight:500}
+
+/* processing */
+.proc h2{text-align:center;margin-bottom:22px;color:var(--vinho)}
+.check{display:flex;align-items:center;gap:11px;font-size:.98rem;color:rgba(98,21,19,.45);margin:12px 0;
+  opacity:0;transform:translateX(-8px);transition:opacity .4s,transform .4s,color .4s}
+.check.on{opacity:1;transform:none;color:var(--vinho)}.check .tick{color:var(--terracota);font-weight:700;font-size:1rem}
+.procbar{height:3px;background:var(--line);margin-top:24px}.procbar i{display:block;height:3px;background:var(--vinho);width:0;transition:width 3s linear}
+.proc-proof{text-align:center;margin-top:22px;font-size:.9rem;color:var(--vinho)}
+
+
+
+/* result shared */
+.reveal{animation:rise .55s cubic-bezier(.2,.7,.3,1) both}
+.divider{height:1px;background:var(--line);margin:28px 0}
+.cta-note{font-size:.76rem;color:rgba(98,21,19,.45);text-align:center;margin-top:8px}
+.restart{display:block;text-align:center;margin-top:24px;color:rgba(98,21,19,.45);font-size:.85rem;background:none;border:none;cursor:pointer;width:100%;font-family:'Jost',sans-serif}
+.restart:hover{color:var(--vinho)}
+
+/* TELA 1 — emocional */
+.r1-alert{display:flex;align-items:flex-start;gap:10px;background:rgba(244,99,58,.12);border:1px solid rgba(244,99,58,.35);padding:13px 15px;margin-bottom:26px}
+.r1-alert-icon{font-size:1rem;flex:0 0 auto;margin-top:1px}
+.r1-alert-text{font-size:.88rem;line-height:1.45;color:var(--vinho);font-weight:400}
+.r1-alert-text b{color:var(--terracota)}
+
+.ire-big{text-align:center;margin:4px 0 28px}
+.ire-big .ire-val{font-family:'Sulphur Point',sans-serif;font-size:5.5rem;font-weight:700;line-height:1;color:var(--vinho)}
+.ire-big .ire-label{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.ire-big .ire-name{font-family:'Sulphur Point',sans-serif;font-size:1.3rem;font-weight:700;margin-top:6px;line-height:1.15;color:var(--vinho)}
+
+.ire-bar-wrap{margin:16px 0 26px}
+.ire-bar-track{height:10px;background:rgba(98,21,19,.08);position:relative;margin-bottom:8px}
+.ire-bar-fill{height:10px;width:0;background:linear-gradient(90deg,var(--agua),var(--terracota));transition:width 1.2s cubic-bezier(.2,.7,.3,1)}
+.ire-bar-labels{display:flex;justify-content:space-between;font-size:.65rem;color:rgba(98,21,19,.4);letter-spacing:.06em;text-transform:uppercase}
+
+.r1-hook{font-family:'Sulphur Point',sans-serif;font-size:1.5rem;font-weight:700;line-height:1.2;margin:22px 0 16px;color:var(--vinho)}
+.r1-hook span{color:var(--terracota)}
+.dor-open{background:rgba(244,99,58,.08);border-left:3px solid var(--terracota);padding:16px 18px;margin:22px 0 4px;font-size:1.02rem;line-height:1.6;color:var(--vinho);font-weight:400}
+
+.check-list{list-style:none;margin:0 0 24px}
+.check-list li{display:flex;align-items:flex-start;gap:12px;font-size:.98rem;line-height:1.5;color:rgba(98,21,19,.82);
+  padding:11px 0;border-bottom:1px solid var(--line);font-weight:400}
+.check-list li:last-child{border-bottom:none}
+.check-list .ck{width:20px;height:20px;border:1.5px solid var(--vinho);background:var(--vinho);display:flex;align-items:center;justify-content:center;flex:0 0 20px;margin-top:1px}
+.check-list .ck:after{content:"✔";font-size:.7rem;line-height:1;color:var(--offwhite)}
+.c-reat{background:var(--terracota)}
+.c-mel{background:var(--vinho)}
+.c-ciclo{background:rgba(98,21,19,.4)}
+
+.img-slot{width:100%;aspect-ratio:16/9;border:1px solid var(--line);background:rgba(98,21,19,.03);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin:22px 0;position:relative;overflow:hidden}
+.img-slot:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 14px,rgba(98,21,19,.015) 14px,rgba(98,21,19,.015) 28px)}
+.img-slot-label{position:relative;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.img-slot-icon{position:relative;width:28px;height:28px;border:1.5px solid var(--muted);display:flex;align-items:center;justify-content:center}
+.img-slot-icon:after{content:"";width:12px;height:10px;border:1.5px solid var(--muted);border-radius:50%}
+
+.quote-box{background:rgba(98,21,19,.05);border-left:2px solid var(--vinho);padding:16px;margin:20px 0}
+.quote-box .qt{font-size:.97rem;line-height:1.55;font-style:italic;color:rgba(98,21,19,.75);font-weight:300}
+.quote-box .qa{font-size:.78rem;color:var(--vinho);margin-top:10px;font-weight:500;font-style:normal}
+
+/* TELA 2 — científica */
+.r2-sec{margin:0 0 28px}
+.r2-label{font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--vinho);font-weight:600;
+  display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.r2-label:before{content:"";width:16px;height:1px;background:var(--vinho);flex:0 0 16px}
+.r2-p{font-size:.98rem;line-height:1.6;font-weight:300;color:rgba(98,21,19,.72);margin-bottom:8px}
+.r2-p b{font-weight:600;color:var(--vinho)}
+
+.pillar-mini{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0 24px}
+.pm-item{background:var(--card);border:1px solid var(--line);padding:12px 10px}
+.pm-tag{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;margin-bottom:6px}
+.pm-tag-r{color:var(--terracota)}.pm-tag-m{color:var(--vinho)}.pm-tag-c{color:rgba(98,21,19,.5)}
+.pm-val{font-family:'Sulphur Point',sans-serif;font-size:1.6rem;font-weight:700;line-height:1}
+.pm-name{font-size:.72rem;color:var(--muted);margin-top:3px;font-weight:300;line-height:1.3}
+.pm-bar{height:3px;margin-top:8px;background:rgba(98,21,19,.08)}
+.pm-fill{height:3px;width:0;transition:width 1s cubic-bezier(.2,.7,.3,1)}
+.pm-fill-r{background:var(--terracota)}.pm-fill-m{background:var(--vinho)}.pm-fill-c{background:rgba(98,21,19,.35)}
+
+.prod-card{border:1px solid var(--line);padding:18px;margin:12px 0;position:relative;overflow:hidden;background:#fff}
+.prod-card:before{content:"";position:absolute;top:0;left:0;width:3px;height:100%}
+.prod-card-u:before{background:var(--vinho)}.prod-card-h:before{background:var(--terracota)}
+.pc-tag{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;margin-bottom:8px}
+.prod-card-u .pc-tag{color:var(--vinho)}.prod-card-h .pc-tag{color:var(--terracota)}
+.pc-name{font-family:'Sulphur Point',sans-serif;font-weight:700;font-size:1.12rem;line-height:1.12;margin-bottom:8px;color:var(--vinho)}
+.pc-body{font-size:.92rem;line-height:1.55;color:rgba(98,21,19,.68);font-weight:300}
+.pc-checks{list-style:none;margin-top:10px}
+.pc-checks li{font-size:.88rem;color:rgba(98,21,19,.68);padding-left:16px;position:relative;margin-bottom:5px;font-weight:300}
+.pc-checks li:before{content:"✔";position:absolute;left:0;color:var(--terracota);font-size:.75rem}
+
+.eube-block{background:rgba(98,21,19,.05);border-left:2px solid var(--vinho);padding:16px 18px;margin:20px 0}
+.eube-block p{font-size:.93rem;line-height:1.6;color:rgba(98,21,19,.72);font-weight:300}
+.eube-block b{font-weight:600;color:var(--vinho)}
+
+.cupom-box{border:1.5px dashed var(--vinho);padding:16px;margin:14px 0;text-align:center}
+.cupom-box b{font-family:'Sulphur Point',sans-serif;font-size:1.4rem;letter-spacing:.1em;color:var(--vinho)}
+.cupom-box span{display:block;font-size:.83rem;color:var(--muted);margin-top:4px}
+
+/* bullet list (shared) */
+.bullet-list{list-style:none;margin:10px 0}
+.bullet-list li{position:relative;padding-left:18px;font-size:.95rem;line-height:1.55;color:rgba(98,21,19,.72);font-weight:300;margin-bottom:8px}
+.bullet-list li:before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;background:var(--vinho)}
+
+.screen{animation:rise .4s cubic-bezier(.2,.7,.3,1)}
+@media (max-width:480px){h1{font-size:2.1rem}.qtext{font-size:1.38rem}h2{font-size:1.6rem}.gauge-wrap{flex-direction:column;align-items:flex-start;gap:14px}.gauge{width:110px;height:110px;flex:0 0 110px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar" id="topbar" style="display:none">
+    <div class="etapa-row"><div class="etapa" id="etapa"></div><div class="etapa-n" id="etapa-n"></div></div>
+    <div class="pbar"><div class="pfill" id="pfill"></div></div>
+  </div>
+  <div id="app"></div>
+</div>
+<script>
+(function(){
+"use strict";
+
+var BLOCOS={1:"O que você sente hoje",2:"Como sua pele reage",3:"O comportamento das manchas",4:"O que alimenta o ciclo",5:"Seu histórico"};
+
+var QUESTIONS=[
+  // ── BLOCO 1 · 3 perguntas matadoras · FORA DO SCORE (dor / segmentação) ──
+  {id:"k1",bloco:1,type:"single",text:"Você já deixou de usar uma roupa, evitou uma foto ou cobriu uma parte da pele por causa das manchas?",opts:[
+    {label:"Nunca"},
+    {label:"Já aconteceu"},
+    {label:"Faço isso com frequência"},
+    {label:"Isso mudou o jeito que eu me visto"}]},
+  {id:"k2",bloco:1,type:"single",text:"Quantos produtos você já comprou tentando resolver isso?",opts:[
+    {label:"Nenhum ainda"},
+    {label:"Um ou dois"},
+    {label:"Vários, e desisti de contar"},
+    {label:"Já perdi as contas e o dinheiro"}]},
+  {id:"k3",bloco:1,type:"single",text:"O que mais te incomoda hoje?",help:"Sua resposta guia o seu diagnóstico.",opts:[
+    {label:"As manchas que já estão na minha pele"},
+    {label:"Elas voltarem sempre que uma some"},
+    {label:"Nunca saber o que de fato funciona"},
+    {label:"A sensação de que a minha pele é difícil demais"}]},
+
+  // ── BLOCO 2 · Reatividade (30% da nota → régua 30/40/30) ──
+  {id:"r1",bloco:2,type:"multi",text:"Fora espinha, o que mais deixa mancha na sua pele?",help:"Pode marcar mais de uma.",opts:[
+    {label:"Depilação"},{label:"Atrito de roupa ou elástico"},{label:"Picada de inseto"},{label:"Coçar a pele"},{label:"Nada além de espinha"}]},
+  {id:"r2",bloco:2,type:"single",text:"Você sente que sua pele marca com uma facilidade que a das outras pessoas não marca?",opts:[
+    {label:"Nunca reparei"},
+    {label:"Às vezes",R:1},
+    {label:"Sim, com frequência",R:2},
+    {label:"Sim, qualquer coisa vira mancha",R:3}]},
+
+  // ── BLOCO 3 · Melanina (40%) + cor (segmentação, fora do score) ──
+  {id:"m1",bloco:3,type:"single",text:"Quando uma espinha seca, quanto tempo a marca escura fica?",opts:[
+    {label:"Some junto com a espinha"},
+    {label:"Some em dias ou poucas semanas",M:1},
+    {label:"Fica meses",M:2},
+    {label:"Fica meses ou até anos, às vezes parece que não sai",M:3}]},
+  {id:"cor",bloco:3,type:"single",text:"Suas manchas se parecem mais com qual dessas?",help:"Isso ajuda a personalizar o seu resultado.",opts:[
+    {label:"Marrom ou café, como se a pele tivesse escurecido ali"},
+    {label:"Avermelhada ou rosada, some mais rápido que as escuras"},
+    {label:"Acinzentada ou com fundo azulado, principalmente as antigas"},
+    {label:"Tenho de mais de um tipo"}]},
+  {id:"m2",bloco:3,type:"single",text:"Depois de um dia de sol, as manchas que você já tem ficam mais visíveis?",opts:[
+    {label:"Não mudam"},
+    {label:"Ficam um pouco mais escuras",M:1},
+    {label:"Ficam bem mais escuras",M:3},
+    {label:"Nunca reparei"}]},
+
+  // ── BLOCO 4 · Ciclo das Manchas (30%) ──
+  {id:"c1",bloco:4,type:"single",text:"Quando uma mancha começa a clarear, o que costuma acontecer?",opts:[
+    {label:"Some de vez"},
+    {label:"Some devagar, mas some",C:1},
+    {label:"Antes de sumir, outra já apareceu",C:3},
+    {label:"Nunca chego a ver sumir",C:3}]},
+  {id:"c2",bloco:4,type:"single",text:"Com que frequência aparece uma espinha, irritação ou mancha nova?",opts:[
+    {label:"Raramente"},
+    {label:"De vez em quando",C:1},
+    {label:"Quase todo mês",C:2},
+    {label:"Quase toda semana",C:3}]},
+
+  // ── BLOCO 5 · Histórico · Ciclo (recidiva) ──
+  {id:"h1",bloco:5,type:"single",text:"Você já tentou tratar as manchas e elas voltaram depois que parou?",opts:[
+    {label:"Voltaram quando eu parei",C:2},
+    {label:"Melhoraram e não voltaram"},
+    {label:"Nunca vi diferença",C:1},
+    {label:"Nunca tentei"}]},
+
+  // ── fase · caminho A · 4 ramificações reais · FORA DO SCORE ──
+  {id:"fase",bloco:5,type:"single",text:"Como está sua pele hoje?",opts:[
+    {label:"Ainda tenho espinhas com frequência"},
+    {label:"Tenho menos espinhas, o problema agora são as manchas"},
+    {label:"Não tenho mais espinhas, mas tenho muitas manchas antigas"},
+    {label:"Não tenho espinha nem mancha, quero prevenir"}]}
+];
+
+// perguntas fora do score
+var NOSCORE={k1:1,k2:1,k3:1,cor:1,fase:1};
+
+QUESTIONS.forEach(function(q){
+  if(NOSCORE[q.id]){q.mR=0;q.mM=0;q.mC=0;return;}
+  if(q.id==="r1"){q.mR=3;q.mM=0;q.mC=0;return;} // multi: gatilho baixo, máx 3
+  var r=0,m=0,c=0;q.opts.forEach(function(o){r=Math.max(r,o.R||0);m=Math.max(m,o.M||0);c=Math.max(c,o.C||0);});
+  q.mR=r;q.mM=m;q.mC=c;
+});
+
+var LVL={
+  R:{n:["Baixo","Leve","Moderado","Alto","Muito Alto"]},
+  M:{n:["Estável","Ocasional","Ativa","Intensa","Persistente"]},
+  C:{n:["Pouco Ativo","Intermitente","Recorrente","Ativo","Contínuo"]}
+};
+
+// shared copy blocks
+var EUBE_BLOCK='<div class="eube-block"><p>A EUBE foi criada pra um tipo de pele que o mercado de skincare sempre colocou em segundo lugar. <b>Pele negra não é pele branca com mais melanina.</b> Ela tem uma fisiologia diferente, uma resposta inflamatória diferente, e precisa de produtos que foram pensados pra ela desde o começo, não adaptados depois. A tecnologia Advanced Melanin foi desenvolvida exclusivamente com base no comportamento da pele negra. Não é adaptação. É origem.</p></div>';
+
+var FISIOLOGIA='<p>A pele negra produz menos ceramidas, os lipídios que mantêm a barreira íntegra, o que significa que perde água com mais facilidade e reage com mais intensidade a qualquer agressão. Ela tem melanócitos que respondem a inflamações com mais melanina do que o necessário, e demoram mais pra desligar esse processo. É o que transforma uma espinha comum numa mancha que dura meses. Ela descama mais rápido, acelerando a perda de barreira e aumentando a sensibilidade. E apesar de ter proteção solar natural maior, não está imune à radiação UV, que intensifica exatamente esse ciclo de hiperpigmentação.</p><p>Nenhuma dessas características é defeito. São especificidades de uma pele que evoluiu pra se proteger de formas que outros tipos de pele não precisaram. O problema é que o mercado nunca as considerou como ponto de partida.</p>';
+
+var CICLO_SEC='<div class="rsec reveal"><div class="rsec-lab">O Ciclo das Manchas</div><p class="body">Toda vez que a sua pele inflama, a melanina entra em ação pra proteger. Na pele negra ela reage mais e demora mais pra desligar. Quando uma nova inflamação chega antes da mancha anterior sumir, elas começam a se sobrepor.</p><ul class="bullet-list"><li>Mais difícil fica manter a pele uniforme</li><li>Mais imprevisível parece o resultado</li><li>Maior a frustração com a rotina</li></ul><p>E aos poucos, isso vira a sensação de que nada funciona.</p></div>';
+
+var VIRADA_SEC='<div class="rsec reveal"><div class="rsec-lab">O que a gente descobriu que muda tudo</div><p class="body">A virada não está em clarear com mais força. Está em reduzir a repetição do ciclo. Quando a sua pele fica equilibrada por mais tempo, as manchas passam a responder melhor, novas marcas aparecem com menos frequência e a rotina fica mais previsível.</p></div>';
+
+var FECHAMENTO_SEC='<div class="rsec reveal"><div class="rsec-lab">O que ninguém te explicou sobre a sua pele</div>'+FISIOLOGIA+'<p class="body" style="margin-top:10px">O que você descobriu aqui não é só o estado da sua pele. É o padrão que explica por que ela se comporta assim. Agora você não está mais lidando com manchas isoladas. Está lidando com um sistema que pode ser compreendido. E isso muda completamente a forma como você cuida da sua pele daqui pra frente.</p></div>';
+
+function baSlot(labelA,labelB){
+  return '<div class="ba-wrap"><div class="ba-slot"><div class="hp-ic" style="margin-bottom:6px"></div><div class="ba-label">foto</div><div class="ba-tag">Antes</div></div><div class="ba-slot"><div class="hp-ic" style="margin-bottom:6px"></div><div class="ba-label">foto</div><div class="ba-tag ba-tag-a">Depois</div></div></div><p class="ba-meta">'+labelA+' · '+labelB+'</p>';
+}
+
+function hidratanteCard(){
+  return '<div class="prod-card prod-card-h"><div class="pc-tag">Controlar a Reatividade</div><div class="pc-name">Hidratante Equilibrante</div><div class="pc-body">Criado pra pele negra, que mancha com facilidade. Ele não apenas hidrata. Acalma a resposta inflamatória que alimenta o Ciclo das Manchas, combate a perda de água elevada na pele negra e repõe as ceramidas que a sua pele produz em menor quantidade. Quando a barreira está comprometida, qualquer inflamação abre uma porta pra mais manchas. O Hidratante fecha essa porta.</div><ul class="pc-checks"><li>Acalma a resposta inflamatória que alimenta o ciclo</li><li>Repõe as ceramidas que a sua pele produz em menor quantidade</li><li>Fecha a porta pra mais manchas. O ciclo perde força.</li></ul></div>';
+}
+
+function uniformizadorCard(){
+  return '<div class="prod-card prod-card-u"><div class="pc-tag">Regular a Melanina</div><div class="pc-name">Uniformizador Multifuncional Avançado</div><div class="pc-body">Desenvolvido exclusivamente pra pele negra que mancha. Não pra pele em geral, adaptado depois. Pra pele negra, desde o começo. Age em duas frentes simultaneamente: uniformiza as manchas que já estão na pele e regula o comportamento da melanina pra evitar que novas manchas apareçam. São mais de 7 ativos que agem em todas as etapas do Ciclo das Manchas. Diferente dos clareadores tradicionais, não recorre a ingredientes que aumentam o risco de irritação em pele negra.</div><ul class="pc-checks"><li>Reduz a aparência das manchas de forma progressiva</li><li>Evita que novas manchas se formem enquanto as antigas clareiam</li><li>Respeita a sensibilidade da pele negra em todas as etapas</li></ul></div>';
+}
+
+var PROFILES=[
+  // PERFIL 1
+  {band:"IRE® 0 a 20",name:"Pele em Equilíbrio",
+   summary:"Sua pele tem uma tendência baixa de transformar inflamações em manchas persistentes. Isso não é comum. É um padrão biológico de resposta regulada, e vale entender o que ele significa pra não perder esse equilíbrio.",
+   pR:"Sua pele responde de forma regulada a estímulos. A intensidade e duração da resposta inflamatória estão dentro de um padrão equilibrado.",
+   pM:"A produção de melanina após inflamações é controlada. Manchas ocasionais tendem a clarear sem intervenção específica.",
+   pC:"O Ciclo das Manchas não está estabelecido. Novas manchas não surgem antes das anteriores desaparecerem.",
+   build:function(name,fase){
+     return '<div class="rsec reveal"><div class="rsec-lab">O que ninguém te explicou sobre a sua pele</div>'+
+       '<p class="body">A maioria das pessoas com pele negra chega ao skincare depois de já ter manchas. Você chegou antes. Isso não é coincidência, é informação.</p>'+FISIOLOGIA+
+       '<p class="body" style="margin-top:10px">O que você descobriu aqui é que a sua pele tem um comportamento mensurável, e que esse comportamento está equilibrado agora. Saber o que mantém esse equilíbrio é o que vai fazer com que ele dure.</p></div>'+
+       '<div class="rsec reveal"><div class="rsec-lab">O que muda a partir de agora</div>'+
+       '<p class="body">Você descobriu que a sua pele está em equilíbrio, e que esse equilíbrio tem uma razão biológica. Não é sorte, não é coincidência. É o sistema de defesa da sua pele funcionando no tempo certo.</p>'+
+       '<p>O que muda é que agora você tem uma referência. Você sabe como a sua pele se comporta quando está bem, o que significa que vai reconhecer quando algo sai do padrão antes que o ciclo se instale. Essa leitura precoce é o que separa quem previne de quem corrige.</p>'+
+       '<p>Na pele negra, o Ciclo das Manchas é muito mais fácil de evitar do que de interromper. Você está no lado certo dessa linha. O cuidado agora é não sair dela.</p></div>'+
+       EUBE_BLOCK+
+       '<div class="rsec reveal"><div class="rsec-lab">O que a sua pele precisa agora</div>'+
+       '<p class="body">Pele negra em equilíbrio não é pele que não precisa de cuidado. É pele cujo sistema de defesa está funcionando no tempo certo. E esse sistema tem uma vulnerabilidade específica: a barreira cutânea.</p>'+
+       '<p>A pele negra perde água com mais facilidade do que outros tipos de pele e produz naturalmente menos ceramidas, os lipídios responsáveis por manter essa barreira íntegra. Quando a barreira enfraquece, qualquer inflamação tem mais chance de ativar a melanina além do necessário. É assim que o equilíbrio se perde.</p>'+
+       '<p>O que sua pele precisa é de um cuidado desenvolvido pra essa fisiologia específica: que repõe as ceramidas que faltam, reduz a perda de água e mantém a barreira forte o suficiente pra que pequenas agressões não se tornem o início de um ciclo de manchas.</p></div>'+
+       '<p class="cta-intro reveal">Conheça o nosso Hidratante Equilibrante para peles negras.</p>'+
+       '<a class="cta reveal" href="#" onclick="return false">Conhecer o Hidratante Equilibrante</a>';
+   }},
+
+  // PERFIL 2
+  {band:"IRE® 21 a 40",name:"Pele com Reatividade Leve",
+   summary:"Sua pele tem reatividade leve. Alguns gatilhos deixam marca, mas o ciclo ainda não está estabelecido. Esse é o melhor momento pra agir, antes do padrão se firmar.",
+   pR:"Sua pele reage em situações específicas. A resposta existe, mas ainda não é persistente.",
+   pM:"A melanina pode ser ativada em momentos específicos, mas ainda não se mantém de forma prolongada.",
+   pC:"O Ciclo das Manchas é intermitente. Aparece, some, e ainda não se consolidou.",
+   build:function(name,fase){
+     return '<div class="rsec reveal"><div class="rsec-lab">O que ninguém te explicou sobre a sua pele</div>'+
+       '<p class="body">A pele negra tem características biológicas que o mercado de beleza ignorou por décadas.</p>'+FISIOLOGIA+
+       '<p class="body" style="margin-top:10px">O que você descobriu aqui é que a sua pele já dá sinais de que o Ciclo das Manchas está começando a se formar. Sinais leves, mas presentes. E essa informação, agora, vale mais do que qualquer produto.</p></div>'+
+       '<div class="rsec reveal"><div class="rsec-lab">O que muda a partir de agora</div>'+
+       '<p class="body">Você está num ponto que a maioria das pessoas não consegue identificar: antes do ciclo se consolidar. O IRE® detectou reatividade leve, o que significa que o sistema ainda não fechou, o padrão ainda não é contínuo, e o que você fizer agora tem um peso desproporcional no que vem depois.</p>'+
+       '<p>Pele negra que mancha não acorda manchada. Ela chega lá por acúmulo. Inflamação sobre inflamação, barreira enfraquecida, melanina que não desligou no tempo certo. Quando o ciclo se firma, é muito mais difícil de interromper do que de prevenir.</p>'+
+       '<p>Você ainda está no lado da prevenção. E esse lado tem uma janela.</p></div>'+
+       CICLO_SEC+EUBE_BLOCK+
+       '<div class="rsec reveal"><div class="rsec-lab">O que a sua pele precisa agora</div>'+
+       '<p class="body">Pele negra com reatividade leve não precisa de intervenção agressiva. Precisa de uma base sólida. E essa base começa pela barreira.</p>'+
+       '<p>A pele negra perde água com mais facilidade e produz naturalmente menos ceramidas. Quando a barreira está comprometida, qualquer inflamação tem mais chance de ativar a melanina além do necessário. É assim que a reatividade leve vira reatividade moderada. E depois persistente.</p>'+
+       '<p>O que sua pele precisa é de um cuidado desenvolvido pra essa fisiologia: que repõe as ceramidas que faltam, reduz a perda de água, acalma a resposta inflamatória antes que ela se torne um padrão, e mantém a barreira forte o suficiente pra que o Ciclo das Manchas não encontre porta aberta.</p></div>'+
+       '<p class="cta-intro reveal">Conheça o nosso Hidratante Equilibrante para peles negras.</p>'+
+       '<a class="cta reveal" href="#" onclick="return false">Conhecer o Hidratante Equilibrante</a>';
+   }},
+
+  // PERFIL 3
+  {band:"IRE® 41 a 60",name:"Pele Sensível à Pigmentação",
+   summary:"Sua pele tem uma tendência moderada a transformar inflamações em manchas que demoram pra clarear. Isso não é aleatório. É o Ciclo das Manchas em formação.",
+   pR:"Sua pele responde com frequência a estímulos como espinhas, depilação e atrito. A resposta já é consistente o suficiente pra gerar manchas regulares.",
+   pM:"A melanina é produzida com intensidade moderada após inflamações. As manchas aparecem com frequência e levam semanas a meses pra clarear.",
+   pC:"O Ciclo das Manchas está em formação. Há momentos em que novas manchas surgem antes das anteriores desaparecerem completamente.",
+   build:function(name,fase){
+     var faseAtiva = fase===0;
+     var prodBlock = faseAtiva ? hidratanteCard() : uniformizadorCard();
+     var prodIntro = faseAtiva ?
+       '<p class="body">No seu estágio, começar pelo clareamento é o erro mais comum: as manchas antigas podem até melhorar, mas a pele continua gerando novas antes das antigas sumirem. O ciclo reinicia antes de qualquer resultado aparecer. O caminho começa pelo controle da reatividade.</p>' :
+       '<p class="body">A fase mais intensa da inflamação passou. As manchas que ficaram são agora o desafio principal, e esse é o momento certo pra trabalhar a regulação da melanina, enquanto o ciclo ainda não está consolidado.</p>';
+     var ctaLabel = faseAtiva ? "Conhecer o Hidratante Equilibrante" : "Conhecer o Uniformizador Multifuncional Avançado";
+     return '<div class="rsec reveal"><div class="rsec-lab">O que ninguém te explicou sobre a sua pele</div>'+
+       '<p class="body">A pele negra tem características biológicas que o mercado de beleza ignorou por décadas.</p>'+FISIOLOGIA+
+       '<p class="body" style="margin-top:10px">O que você descobriu aqui é que o Ciclo das Manchas já está em formação na sua pele. Não é exagero. É um padrão mensurável, e ele tem como ser interrompido agora, antes de se consolidar.</p></div>'+
+       '<div class="rsec reveal"><div class="rsec-lab">O que muda a partir de agora</div>'+
+       '<p class="body">Você está num estágio em que o ciclo ainda pode ser interrompido sem uma abordagem pesada. Isso é uma vantagem real. Pele negra que chega no estágio persistente precisou passar por esse ponto antes, e na maioria das vezes não tinha informação suficiente pra agir.</p>'+
+       '<p>Agora você tem. E o que você fizer nos próximos meses vai determinar se o ciclo se aprofunda ou para aqui.</p></div>'+
+       '<div class="rsec reveal"><div class="rsec-lab">O que faz o ciclo não parar</div>'+
+       '<p class="body">Focar só em clarear as manchas sem considerar como a sua pele reage. Enquanto a reatividade não é controlada, novas marcas continuam surgindo e reiniciam o ciclo antes de qualquer resultado aparecer.</p></div>'+
+       CICLO_SEC+EUBE_BLOCK+
+       '<div class="rsec reveal"><div class="rsec-lab">O que a sua pele precisa agora</div>'+prodIntro+prodBlock+'</div>'+
+       '<p class="cta-intro reveal">Conheça o nosso produto para peles negras que mancham.</p>'+
+       '<a class="cta reveal" href="#" onclick="return false">'+ctaLabel+'</a>';
+   }},
+
+  // PERFIL 4
+  {band:"IRE® 61 a 80",name:"Pele de Alta Reatividade",
+   summary:"Sua pele tem uma tendência maior a transformar pequenas inflamações em marcas que demoram mais pra desaparecer. Isso não é aleatório. É um padrão de resposta da sua pele.",
+   pR:"Sua pele responde rapidamente a estímulos como espinhas, depilação e atrito. O mais importante não é que ela reage, mas quanto tempo demora pra interromper essa resposta.",
+   pM:"Há uma tendência de manter a produção de melanina ativa mesmo depois da inflamação inicial diminuir, o que prolonga o escurecimento.",
+   pC:"Há um padrão em que novas inflamações surgem antes que manchas antigas desapareçam. Esse ciclo pode dar a sensação de que sua pele marca por qualquer coisa.",
+   build:function(name,fase){
+     var faseAtiva = fase===0;
+     var faseBlock = faseAtiva ?
+       '<p class="body">Sua pele ainda está em resposta inflamatória ativa. Cada nova espinha alimenta o ciclo antes que o anterior tenha terminado. O desafio agora é interromper essa alimentação contínua, reduzindo a intensidade com que cada inflamação ativa a melanina.</p>' :
+       '<p class="body">A fase mais intensa da inflamação parece já ter passado. Hoje o principal desafio não é mais a acne ativa, mas as manchas que ficaram. Mesmo quando a pele melhora, ela pode manter marcas por semanas ou meses. Esse é um momento comum em peles com alta reatividade.</p>';
+     return '<div class="rsec reveal"><div class="rsec-lab">O que ninguém te explicou sobre a sua pele</div>'+
+       '<p class="body">A pele negra produz menos ceramidas, perde água com mais facilidade e tem melanócitos que não desligam no tempo certo depois de uma inflamação. Ela descama mais rápido, fragilizando a barreira continuamente. E responde à radiação UV com mais pigmentação, o que significa que exposição solar alimenta o ciclo mesmo nos dias em que não aparece nenhuma espinha.</p>'+
+       '<p>O que você sente como "nada funciona" tem uma explicação biológica precisa. Não é que os produtos falharam. É que nenhum deles foi desenvolvido pra interromper esse ciclo específico, nessa fisiologia específica.</p></div>'+
+       '<div class="rsec reveal"><div class="rsec-lab">O que muda a partir de agora</div>'+
+       '<p class="body">O ciclo está estabelecido na sua pele. Isso não é irreversível, mas significa que uma abordagem de uma frente só não vai funcionar. Clarear sem controlar a reatividade reinicia o ciclo. Hidratar sem trabalhar a melanina mantém a barreira mas não resolve as manchas que já estão lá.</p>'+
+       '<p>O que muda é que você para de tratar sintomas e começa a tratar o sistema. As duas frentes ao mesmo tempo, com produtos desenvolvidos pra essa fisiologia específica.</p></div>'+
+       '<div class="rsec reveal"><div class="rsec-lab">Onde a sua pele está agora</div>'+faseBlock+'</div>'+
+       '<div class="rsec reveal"><div class="rsec-lab">O que faz o ciclo não parar</div>'+
+       '<p class="body">Seu desafio não é pontual. É cíclico. Não é sobre uma mancha isolada. É sobre impedir que o ciclo se repita. Se você foca só em clarear as manchas antigas sem considerar a reatividade, novas marcas continuam surgindo e reiniciam tudo.</p></div>'+
+       '<div class="rsec reveal"><div class="rsec-lab">O erro mais comum em pele negra</div>'+
+       '<p class="body">O problema não é apenas cuidar das manchas. É o quanto sua pele consegue permanecer uniforme antes de reiniciar o ciclo. Quando esse equilíbrio não é considerado, o padrão costuma ser o mesmo: melhora por um tempo, e depois tudo volta. Não porque nada funciona, mas porque a pele volta ao mesmo comportamento.</p></div>'+
+       CICLO_SEC+EUBE_BLOCK+
+       '<div class="rsec reveal"><div class="rsec-lab">O que a sua pele precisa agora</div>'+
+       '<p class="body">Sua pele precisa trabalhar duas frentes ao mesmo tempo.</p>'+
+       uniformizadorCard()+hidratanteCard()+'</div>'+
+       VIRADA_SEC+
+       '<p class="cta-intro reveal">Conheça o nosso protocolo para peles negras que mancham.</p>'+
+       '<a class="cta reveal" href="#" onclick="return false">Ver meu protocolo completo</a>';
+   }},
+
+  // PERFIL 5
+  {band:"IRE® 81 a 100",name:"Pele de Reatividade Persistente",
+   summary:"Sua pele apresenta um padrão contínuo de ativação. A melanina tende a permanecer em produção mesmo depois da inflamação inicial diminuir, e novas manchas aparecem antes que as anteriores desapareçam. É um ciclo firmado, e ele tem como ser compreendido.",
+   pR:"Sua pele mantém a resposta inflamatória ativa de forma quase contínua. Qualquer estímulo, mesmo pequeno, tende a prolongar o estado de reatividade.",
+   pM:"A produção de melanina é persistentemente acelerada. Mesmo sem novas inflamações visíveis, o mecanismo de pigmentação segue ativo.",
+   pC:"O Ciclo das Manchas está em sobreposição constante. Novas manchas surgem antes que as anteriores desapareçam, criando a sensação de que a pele nunca está uniforme.",
+   build:function(name,fase){
+     var faseAtiva = fase===0;
+     var faseBlock = faseAtiva ?
+       '<p class="body">Sua pele ainda está em resposta inflamatória intensa. O ciclo está se alimentando continuamente. O desafio principal é reduzir a intensidade dessa resposta enquanto o acúmulo de manchas já existentes é trabalhado ao mesmo tempo. Cuidar de uma frente só não quebra o ciclo.</p>' :
+       '<p class="body">A fase mais aguda parece já ter passado. Mas as manchas que ficaram são muitas, e a pele ainda reage facilmente a novos estímulos, o que significa que o ciclo continua sendo alimentado mesmo sem acne ativa. Esse é o padrão mais comum em peles com reatividade persistente: parece que melhorou, mas o ciclo não parou.</p>';
+     return '<div class="rsec reveal"><div class="rsec-lab">O que ninguém te explicou sobre a sua pele</div>'+
+       '<p class="body">A pele negra produz menos ceramidas, perde água com mais facilidade, tem melanócitos que respondem com mais intensidade e demoram mais pra desligar. Ela descama mais rápido, fragilizando a barreira de forma contínua. Quando o Ciclo das Manchas se firma, ele se retroalimenta: a barreira enfraquecida facilita novas inflamações, que ativam mais melanina, que geram mais manchas, que encontram uma barreira ainda mais comprometida.</p>'+
+       '<p>O que você sente como "nada funciona" tem uma explicação biológica precisa. Não é que os produtos falharam. É que nenhum deles foi desenvolvido pra interromper esse ciclo específico, nessa fisiologia específica.</p></div>'+
+       '<div class="rsec reveal"><div class="rsec-lab">O que muda a partir de agora</div>'+
+       '<p class="body">Você está no estágio mais avançado do Ciclo das Manchas. Isso significa que a abordagem precisa ser combinada, progressiva e consistente. Não existe produto que resolve isso em duas semanas, e qualquer marca que prometa isso não está sendo honesta com você.</p>'+
+       '<p>O que muda é que você para de procurar o produto certo e começa a entender o sistema. O ciclo tem dois lados, e os dois precisam ser tratados ao mesmo tempo. É assim que ele para.</p></div>'+
+       '<div class="rsec reveal"><div class="rsec-lab">Onde a sua pele está agora</div>'+faseBlock+'</div>'+
+       '<div class="rsec reveal"><div class="rsec-lab">O que faz o ciclo não parar</div>'+
+       '<p class="body">Seu desafio não é pontual. É sistêmico. Não é sobre uma mancha isolada. É sobre um ciclo que se retroalimenta, e que vai continuar se repetindo enquanto só um lado dele for tratado.</p></div>'+
+       '<div class="rsec reveal"><div class="rsec-lab">O erro mais comum em pele negra</div>'+
+       '<p class="body">O problema não é apenas cuidar das manchas. É o quanto sua pele consegue permanecer uniforme antes de reiniciar o ciclo. Quando esse equilíbrio não é considerado, o padrão costuma ser o mesmo: melhora por um tempo, e depois tudo volta. Não porque nada funciona, mas porque a pele volta ao mesmo comportamento.</p></div>'+
+       CICLO_SEC+EUBE_BLOCK+
+       '<div class="rsec reveal"><div class="rsec-lab">O que a sua pele precisa agora</div>'+
+       '<p class="body">Sua pele precisa de uma abordagem combinada e progressiva. Os dois lados do ciclo ao mesmo tempo.</p>'+
+       uniformizadorCard()+
+       '<p style="font-size:.93rem;color:var(--muted);margin:8px 0 4px;font-weight:300">No estágio persistente, a barreira está comprometida de forma contínua. Restaurá-la é o que permite que o Uniformizador funcione, porque sem barreira qualquer ativo enfrenta mais resistência e mais risco de irritação.</p>'+
+       hidratanteCard()+'</div>'+
+       VIRADA_SEC+
+       '<p class="cta-intro reveal">Conheça o nosso Protocolo Completo para peles negras que mancham.</p>'+
+       '<a class="cta reveal" href="#" onclick="return false">Quero o Protocolo Completo</a>';
+   }}
+];
+
+// flow
+var FLOW=[{kind:"intro"}];
+QUESTIONS.forEach(function(q){
+  FLOW.push({kind:"q",qid:q.id});
+  if(q.id==="k3") FLOW.push({kind:"trans",id:"t1"}); // após as 3 matadoras
+  if(q.id==="m2") FLOW.push({kind:"trans",id:"t2"}); // após melanina
+});
+FLOW.push({kind:"processing"},{kind:"capture"},{kind:"result"});
+
+var TOTAL_Q=QUESTIONS.length;
+function qById(id){for(var i=0;i<QUESTIONS.length;i++)if(QUESTIONS[i].id===id)return QUESTIONS[i];}
+function skipped(id){return false;}
+
+var state={step:0,name:"",whatsapp:"",email:"",answers:{}};
+var app=document.getElementById("app");
+var topbar=document.getElementById("topbar"),etapaEl=document.getElementById("etapa"),etapaN=document.getElementById("etapa-n"),pfill=document.getElementById("pfill");
+function uuid(){return "q-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,8);}
+var quizSid=uuid();
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function clamp(n){return Math.max(0,Math.min(100,n));}
+// cortes deslocados p/ o cliente-alvo cair em Alta/Persistente com folga
+function bnd(p){return p<=18?0:p<=38?1:p<=58?2:p<=79?3:4;}
+
+function scores(){
+  var R=0,M=0,C=0,mR=0,mM=0,mC=0;
+  QUESTIONS.forEach(function(q){
+    if(NOSCORE[q.id]) return;
+    var a=state.answers[q.id]; if(a==null) return;
+    mR+=q.mR;mM+=q.mM;mC+=q.mC;
+    if(q.id==="r1"){ // gatilho baixo: quanto mais fontes de mancha fora de espinha, maior R
+      var sel=(a||[]).filter(function(k){return k!==4;}).length; // idx4 = "nada além de espinha"
+      R+=(sel<=1?1:sel===2?2:3); return;
+    }
+    if(q.type==="multi") return;
+    var o=q.opts[a];R+=o.R||0;M+=o.M||0;C+=o.C||0;
+  });
+  var Rp=clamp(Math.round(R/Math.max(1,mR)*100));
+  var Mp=clamp(Math.round(M/Math.max(1,mM)*100));
+  var Cp=clamp(Math.round(C/Math.max(1,mC)*100));
+  // régua 30/40/30 — Melanina domina (cliente-alvo: mancha que demora a sair)
+  return {R:Rp,M:Mp,C:Cp,ire:Math.round(.30*Rp+.40*Mp+.30*Cp)};
+}
+
+function fase(){ // caminho A: 4 ramificações reais (0..3). null → prevenção
+  var f=state.answers.fase;
+  return f==null?3:f;
+}
+
+function active(i){var s=FLOW[i];if(s.kind==="q"&&skipped(s.qid))return false;return true;}
+function go(i){state.step=i;render();window.scrollTo({top:0,behavior:"smooth"});}
+function next(){var i=state.step+1;while(i<FLOW.length&&!active(i))i++;go(i);}
+function back(){var i=state.step-1;while(i>0&&(!active(i)||FLOW[i].kind==="processing"))i--;go(i);}
+
+function updateBar(){
+  var st=FLOW[state.step];
+  if(st.kind==="q"||st.kind==="trans"){
+    topbar.style.display="block";
+    var qc=0,bl=1;
+    for(var i=0;i<=state.step;i++){if(FLOW[i].kind==="q"&&!skipped(FLOW[i].qid)){qc++;bl=qById(FLOW[i].qid).bloco;}}
+    etapaEl.textContent="Bloco "+bl+" · "+BLOCOS[bl];
+    etapaN.textContent=qc+" de "+TOTAL_Q;
+    pfill.style.width=Math.round(qc/TOTAL_Q*100)+"%";
+  } else topbar.style.display="none";
+}
+
+function render(){var st=FLOW[state.step];updateBar();
+  if(st.kind==="intro")return renderIntro();
+  if(st.kind==="q")return renderQuestion(qById(st.qid));
+  if(st.kind==="trans")return renderTrans(st);
+  if(st.kind==="processing")return renderProcessing();
+  if(st.kind==="capture")return renderCapture();
+  if(st.kind==="result")return renderResult();
+}
+
+function renderIntro(){
+  app.innerHTML='<div class="screen">'+
+    '<div class="eyebrow eyebrow-ora" style="display:inline-block">Seu mapa de reatividade da pele negra</div>'+
+    '<h1 style="margin-top:24px">Se a sua <span class="hl-ora">pele negra</span> mancha com facilidade e <span class="hl-ora">demora pra sair</span><span class="h1-sub">este diagnóstico foi feito pra você.</span></h1>'+
+    '<p class="lead">Descubra seu Nível de Reatividade (IRE®) e <b>pare de gastar dinheiro testando produto no escuro</b>. Em 2 minutos, você entende como manter a sua pele mais uniforme e saudável por mais tempo.</p>'+
+    '<div class="hero-photo"><div class="hp-label"><span class="hp-ic"></span>foto · 1:1</div></div>'+
+    '<p class="proof">Milhares de pessoas negras já descobriram um novo jeito de entender a própria pele.</p>'+
+    '<button class="cta" id="b">Quero descobrir meu resultado</button></div>';
+  document.getElementById("b").onclick=next;
+}
+
+function renderTrans(st){
+  var body="";
+  if(st.id==="t1"){
+    body='<div class="quote">&ldquo;Passei anos tentando clarear minhas manchas. Só depois que entendi que minha pele era altamente reativa consegui mudar minha rotina.&rdquo;<span>Juliana Almeida · pele retinta (IRE 76)</span></div>'+
+    baSlot("Juliana Almeida","IRE 76 · 60 dias de protocolo")+
+    '<div class="inter-h">Você não está sozinha.</div>'+
+    '<p class="inter-p">8 em cada 10 pessoas de pele negra têm uma resposta mais intensa às inflamações. É isso que faz a pele marcar fácil e demorar pra clarear.</p>'+
+    '<p class="inter-p">Não é descuido seu, é a melanina fazendo o que sabe: te proteger. O que faltou até hoje foram produtos pensados para a fisiologia da pele negra.</p>'+
+    '<p class="inter-hl">Continua o teste pra descobrir o que mantém o seu Ciclo das Manchas ativo e o que ajuda a manter a sua pele mais uniforme por mais tempo.</p>';
+  } else if(st.id==="t2"){
+    body='<div class="inter-h">Já dá pra ver o comportamento das suas manchas.</div>'+
+    '<p class="inter-p">Falta entender o que mantém esse ciclo ativo. Mais duas perguntas e seu diagnóstico está pronto.</p>';
+  } else {
+    body='<div class="inter-h">Seu perfil está ficando mais preciso.</div>'+
+    '<p class="inter-p">Agora só precisamos entender seu histórico para completar a análise.</p>';
+  }
+  app.innerHTML='<div class="screen inter">'+body+'<button class="cta" id="b">Continuar</button></div>';
+  document.getElementById("b").onclick=next;
+}
+
+function renderQuestion(q){
+  var a=state.answers[q.id],body="";
+  for(var k=0;k<q.opts.length;k++){
+    var on=q.type==="multi"?((a||[]).indexOf(k)>-1):(a===k);
+    var chk=q.type==="multi"?'<span class="chk"></span>':'';
+    body+='<button class="opt'+(on?" sel":"")+'" data-k="'+k+'">'+chk+esc(q.opts[k].label)+'</button>';
+  }
+  var canNext=q.type==="multi"?((a||[]).length>0):(a!=null);
+  app.innerHTML='<div class="screen"><div class="qtext">'+esc(q.text)+'</div>'+
+    (q.help?'<div class="qhelp">'+esc(q.help)+'</div>':'')+
+    '<div id="opts">'+body+'</div>'+
+    '<button class="cta" id="next" style="margin-top:20px" '+(canNext?"":"disabled")+'>Continuar</button></div>';
+  var btns=app.querySelectorAll(".opt"),nb=document.getElementById("next");
+  for(var b=0;b<btns.length;b++){
+    btns[b].onclick=function(){
+      var kk=parseInt(this.getAttribute("data-k"),10);
+      if(q.type==="multi"){
+        var arr=state.answers[q.id]||[],p=arr.indexOf(kk);
+        if(p>-1)arr.splice(p,1);else arr.push(kk);
+        state.answers[q.id]=arr;
+        for(var z=0;z<btns.length;z++){btns[z].classList.toggle("sel",arr.indexOf(parseInt(btns[z].getAttribute("data-k"),10))>-1);}
+        nb.disabled=arr.length===0;
+      } else {
+        state.answers[q.id]=kk;
+        for(var y=0;y<btns.length;y++)btns[y].classList.remove("sel");
+        this.classList.add("sel");nb.disabled=false;
+      }
+    };
+  }
+  nb.onclick=function(){if(!nb.disabled)next();};
+}
+
+function renderProcessing(){
+  var items=["Avaliando seu IRE®","Calculando o Controle da Reatividade","Entendendo o comportamento da sua melanina","Identificando o estágio do Ciclo das Manchas"];
+  var rows="";for(var i=0;i<items.length;i++)rows+='<div class="check" id="ck'+i+'"><span class="tick">✔</span> '+items[i]+'</div>';
+  app.innerHTML='<div class="screen proc"><h2>Estamos analisando seu diagnóstico</h2>'+rows+
+    '<div class="procbar"><i id="pb"></i></div>'+
+    '<p class="proc-proof">97% das clientes da EUBE disseram que entenderam sua pele de uma forma completamente diferente depois do diagnóstico.</p></div>';
+  setTimeout(function(){var pb=document.getElementById("pb");if(pb)pb.style.width="100%";},60);
+  items.forEach(function(_,i){setTimeout(function(){var el=document.getElementById("ck"+i);if(el)el.classList.add("on");},400+i*650);});
+  setTimeout(function(){if(FLOW[state.step]&&FLOW[state.step].kind==="processing")next();},3400);
+}
+
+function renderCapture(){
+  app.innerHTML='<div class="screen"><div class="eyebrow eyebrow-agua">Seu resultado está pronto</div>'+
+    '<h2 style="margin-top:16px">Falta só liberar sua análise</h2>'+
+    '<p class="lead">Informe seus dados para liberar o seu Perfil de Reatividade completo.</p>'+
+    '<div style="margin-top:18px">'+
+      '<div class="field"><label>Nome</label><input id="f-name" type="text" placeholder="Seu primeiro nome" value="'+esc(state.name)+'"></div>'+
+      '<div class="field"><label>WhatsApp</label><input id="f-wa" type="tel" inputmode="numeric" placeholder="75 99999 9999" value="'+esc(state.whatsapp)+'"></div>'+
+      '<div class="field"><label>E-mail</label><input id="f-email" type="email" placeholder="seu@email.com" value="'+esc(state.email)+'"></div>'+
+      '<div class="err" id="err"></div></div>'+
+    '<button class="cta" id="next" style="margin-top:20px">Ver meu diagnóstico completo</button>'+
+    '<p class="privacy" style="color:rgba(98,21,19,.5)">Seus dados são usados apenas pra entregar seu diagnóstico. Sem spam.</p></div>';
+  document.getElementById("next").onclick=function(){
+    var nm=document.getElementById("f-name").value.trim();
+    var wa=document.getElementById("f-wa").value.replace(/\D/g,"");
+    var em=document.getElementById("f-email").value.trim();
+    var err=document.getElementById("err");
+    if(nm.length<2){err.textContent="Coloca seu nome pra gente.";return;}
+    if(!em){err.textContent="Coloca seu e-mail pra liberar o diagnóstico.";return;}
+    if(!/.+@.+\..+/.test(em)){err.textContent="Esse e-mail parece inválido.";return;}
+    if(!wa){err.textContent="Coloca seu WhatsApp pra liberar o diagnóstico.";return;}
+    if(wa.length<10){err.textContent="Esse WhatsApp parece incompleto.";return;}
+    state.name=nm;state.whatsapp=wa;state.email=em;logResult();next();
+  };
+}
+
+function imgSlot(label){
+  return '<div class="img-slot"><div class="img-slot-icon"></div><div class="img-slot-label">'+label+'</div></div>';
+}
+
+function baGrid(caption){
+  return '<div class="ba-wrap">'+
+    '<div class="ba-slot"><div class="hp-ic"></div><div class="ba-label">foto</div><div class="ba-tag">Antes</div></div>'+
+    '<div class="ba-slot"><div class="hp-ic"></div><div class="ba-label">foto</div><div class="ba-tag ba-tag-a">Depois</div></div>'+
+  '</div><p class="ba-meta">'+caption+'</p>';
+}
+
+function pillarMini(s){
+  return '<div class="pillar-mini">'+
+    '<div class="pm-item"><div class="pm-tag pm-tag-r">Reatividade</div><div class="pm-val" id="pv-r">0</div><div class="pm-name">'+LVL.R.n[bnd(s.R)]+'</div><div class="pm-bar"><div class="pm-fill pm-fill-r" data-w="'+s.R+'"></div></div></div>'+
+    '<div class="pm-item"><div class="pm-tag pm-tag-m">Melanina</div><div class="pm-val" id="pv-m">0</div><div class="pm-name">'+LVL.M.n[bnd(s.M)]+'</div><div class="pm-bar"><div class="pm-fill pm-fill-m" data-w="'+s.M+'"></div></div></div>'+
+    '<div class="pm-item"><div class="pm-tag pm-tag-c">Ciclo</div><div class="pm-val" id="pv-c">0</div><div class="pm-name">'+LVL.C.n[bnd(s.C)]+'</div><div class="pm-bar"><div class="pm-fill pm-fill-c" data-w="'+s.C+'"></div></div></div>'+
+  '</div>';
+}
+
+function renderResult(){
+  var s=scores(),pi=bnd(s.ire),P=PROFILES[pi],f=fase();
+
+  var BULLETS_12=['Entenda sua pele antes que ela comece a marcar.','Pare de gastar com produto que não foi feito para pele negra.','Tenha uma rotina desenvolvida para a sua pele negra e fique mais tranquila.'];
+  var BULLETS_3A=['Pare de ver cada espinha virar mancha que dura meses.','Pare de gastar dinheiro com produtos que não funcionam na pele negra.','Tenha uma rotina desenvolvida para a sua pele negra e fique mais tranquila.'];
+  var BULLETS_345=['Veja a sua pele mais uniforme e bonita sem efeito rebote.','Pare de gastar dinheiro com produtos que não funcionam na pele negra.','Tenha uma rotina desenvolvida para a sua pele negra e fique mais tranquila.'];
+
+  var faseAtiva=(f===0); // 0=acne ativa · 1=transição · 2=mancha antiga · 3=prevenção
+  var HOOKS=[
+    [state.name+', sua pele está em equilíbrio.','Isso é raro. E agora você sabe o que fazer pra manter.',BULLETS_12],
+    [state.name+', sua pele está num ponto de inflexão.','O ciclo ainda está fraco. Agir agora é muito mais fácil do que depois.',BULLETS_12],
+    [state.name+', identificamos um padrão de manchas em formação.','Não é coincidência. É o Ciclo das Manchas começando a se firmar.',faseAtiva?BULLETS_3A:BULLETS_345],
+    [state.name+', sua pele está em Ciclo das Manchas ativo.','Clarear sem controlar a reatividade é o erro que faz tudo voltar do começo.',BULLETS_345],
+    [state.name+', sua pele está em reatividade sistêmica.','O ciclo está firmado nos dois lados. Tratamento de um lado só não para ele.',BULLETS_345]
+  ];
+
+  var TESTIS=[null,null,
+    {t:"Comecei antes das manchas virarem problema. Três meses depois, minha pele reagia muito menos a qualquer coisa.",w:"Cliente EUBE · pele retinta · IRE 53"},
+    {t:"Minha pele parou de criar manchas novas antes de clarear as antigas. Nunca tinha entendido por que isso acontecia.",w:"Cliente EUBE · pele parda · IRE 71"},
+    {t:"Tinha manchas desde os 19 anos. Com a EUBE foi a primeira vez que entendi o que estava acontecendo.",w:"Cliente EUBE · pele negra · IRE 89"}
+  ];
+
+  var H=HOOKS[pi], testi=TESTIS[pi];
+  var bullets=H[2].map(function(b){return '<li><span class="ck"></span>'+esc(b)+'</li>';}).join('');
+  var testiHtml=testi?'<div class="quote-box reveal"><div class="qt">&ldquo;'+esc(testi.t)+'&rdquo;</div><div class="qa">'+esc(testi.w)+'</div></div>':'';
+
+  // ── Q3 (k3) como chave de segmentação: a dor escolhida abre o resultado ──
+  var DOR=[
+    'Você disse que o que mais te incomoda são as manchas que já estão na sua pele. Dá pra tratar o que já está lá. Mas só funciona de verdade se a pele parar de criar manchas novas ao mesmo tempo.',
+    'Você disse que o que mais te incomoda é elas voltarem sempre que uma some. Isso tem nome: é o Ciclo das Manchas. E ele tem como parar.',
+    'Você disse que o que mais te incomoda é nunca saber o que de fato funciona. Você nunca soube porque nunca soube como a sua pele reage. Agora você sabe.',
+    'Você disse que sente que a sua pele é difícil demais. Ela não é difícil. Ela é reativa. E reatividade tem mecanismo, tem explicação e tem caminho.'
+  ];
+  var kdor=state.answers.k3;
+  var dorHtml=(kdor!=null)?'<div class="dor-open reveal" style="animation-delay:100ms">'+esc(DOR[kdor])+'</div>':'';
+
+  // CTA label by profile
+  var ctaLabels=["Conhecer o Hidratante Equilibrante","Conhecer o Hidratante Equilibrante",
+    faseAtiva?"Conhecer o Hidratante Equilibrante":"Conhecer o Uniformizador",
+    "Ver meu protocolo completo","Quero o Protocolo Completo"];
+  var ctaLabel=ctaLabels[pi];
+
+  // ---- TELA 1 ----
+  app.innerHTML=
+    '<div class="screen">'+
+    '<div class="eyebrow eyebrow-ora" style="display:inline-block">Seu Perfil EUBE® · '+esc(P.band)+'</div>'+
+    '<div class="r1-alert reveal" style="animation-delay:60ms;margin-top:20px">'+
+      '<span class="r1-alert-icon">⚠</span>'+
+      '<span class="r1-alert-text"><b>Ponto de atenção:</b> com base nas suas respostas, identificamos um padrão específico de resposta da sua pele às inflamações.</span>'+
+    '</div>'+
+
+    '<div class="ire-big reveal" style="animation-delay:120ms">'+
+      '<div class="ire-val" id="iren">0</div>'+
+      '<div class="ire-label">IRE® · Índice de Reatividade EUBE</div>'+
+      '<div class="ire-name">'+esc(P.name)+'</div>'+
+    '</div>'+
+
+    '<div class="ire-bar-wrap reveal" style="animation-delay:180ms">'+
+      '<div class="ire-bar-track"><div class="ire-bar-fill" id="irebar" data-w="'+s.ire+'"></div></div>'+
+      '<div class="ire-bar-labels"><span>Equilibrada</span><span>Reatividade Alta</span></div>'+
+    '</div>'+
+
+    pillarMini(s)+
+
+    dorHtml+
+
+    '<div class="r1-hook reveal" style="animation-delay:220ms">'+esc(H[0])+'<br><span>'+esc(H[1])+'</span></div>'+
+
+    '<ul class="check-list reveal" style="animation-delay:280ms">'+bullets+'</ul>'+
+
+    (pi>=2 ? (testiHtml+baGrid(testi?testi.w:'Cliente EUBE')) : '')+
+
+    '<p style="font-family:\'Sulphur Point\',sans-serif;font-size:1.35rem;font-weight:700;color:var(--vinho);text-align:center;margin:28px 0 18px;line-height:1.2" class="reveal">Está pronta para tratar as suas manchas do jeito certo?</p>'+
+
+    '<div class="reveal">'+
+      '<a class="cta" href="#" id="cta-detail" onclick="return false">Ver meu resultado completo</a>'+
+      '<p class="cta-note">entenda o que está por trás do seu IRE®</p>'+
+    '</div>'+
+    '<button class="restart" id="restart">refazer o diagnóstico</button>'+
+    '</div>';
+
+  // animate IRE counter + bar + pilares
+  setTimeout(function(){
+    var iren=document.getElementById("iren"),bar=document.getElementById("irebar");
+    if(bar){bar.style.transition="width 1.2s cubic-bezier(.2,.7,.3,1)";bar.style.width=s.ire+"%";}
+    var pv={r:document.getElementById("pv-r"),m:document.getElementById("pv-m"),c:document.getElementById("pv-c")};
+    var fills=app.querySelectorAll(".pm-fill");
+    for(var i=0;i<fills.length;i++){(function(el){el.style.width=(el.getAttribute("data-w")||0)+"%";})(fills[i]);}
+    var t0=null;function tick(ts){if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/1200);
+      if(iren)iren.textContent=Math.round(s.ire*p);
+      if(pv.r)pv.r.textContent=Math.round(s.R*p);
+      if(pv.m)pv.m.textContent=Math.round(s.M*p);
+      if(pv.c)pv.c.textContent=Math.round(s.C*p);
+      if(p<1)requestAnimationFrame(tick);}
+    requestAnimationFrame(tick);
+  },300);
+
+  document.getElementById("cta-detail").onclick=function(e){e.preventDefault();renderResult2(s,pi,P,f,ctaLabel);window.scrollTo({top:0,behavior:"smooth"});};
+  document.getElementById("restart").onclick=function(){state={step:0,name:"",whatsapp:"",email:"",answers:{}};quizSid=uuid();go(0);};
+}
+
+function pillarRow2(key,label,cls,pct){
+  return '<div style="margin:16px 0">'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;font-size:.92rem;margin-bottom:7px">'+
+      '<span style="color:var(--vinho)">'+label+'</span>'+
+      '<span style="color:var(--muted);font-size:.82rem;font-weight:500">'+LVL[key].n[bnd(pct)]+' · '+pct+'%</span>'+
+    '</div>'+
+    '<div style="height:6px;background:rgba(98,21,19,.08)">'+
+      '<div class="'+cls+'" style="height:6px;width:0;transition:width 1.1s cubic-bezier(.2,.7,.3,1)" data-w="'+pct+'"></div>'+
+    '</div></div>';
+}
+
+var SL=function(t){return '<div style="font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--vinho);font-weight:600;display:flex;align-items:center;gap:8px;margin:28px 0 14px"><span style="width:16px;height:1px;background:var(--terracota);display:inline-block;flex:0 0 16px"></span>'+t+'</div>';};
+var DIV='<div style="height:1px;background:var(--line);margin:32px 0"></div>';
+var IMGSLOT=function(lbl){return '<div style="width:100%;aspect-ratio:16/9;border:1px solid var(--line);background:rgba(98,21,19,.03);display:flex;align-items:center;justify-content:center;margin:24px 0;position:relative"><span style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(98,21,19,.28)">'+lbl+'</span></div>';};
+var IMGPERSON=IMGSLOT('imagem · pessoa com pele negra');
+var IMGFISIO=IMGSLOT('imagem · fisiologia da pele negra');
+var IMGRESULT=IMGSLOT('imagem · resultado com o protocolo');
+
+function p(txt,mt){return '<p style="font-size:1rem;line-height:1.65;font-weight:300;color:rgba(98,21,19,.8);margin:'+(mt||'0 0 16px')+'">'+txt+'</p>';}
+function pb(txt){return '<p style="font-size:1rem;line-height:1.65;font-weight:400;color:var(--vinho);margin:0 0 16px">'+txt+'</p>';}
+function ul(items,col){var c=col||'var(--terracota)';return '<ul style="list-style:none;margin:12px 0 20px">'+items.map(function(i){return '<li style="display:flex;align-items:flex-start;gap:10px;font-size:1rem;line-height:1.55;color:rgba(98,21,19,.82);padding:10px 0;border-bottom:1px solid var(--line)"><span style="width:6px;height:6px;border-radius:50%;background:'+c+';flex:0 0 6px;margin-top:7px"></span>'+i+'</li>';}).join('')+'</ul>';}
+function boldhead(txt){return '<p style="font-size:.95rem;font-weight:700;color:var(--vinho);margin:20px 0 8px;letter-spacing:.01em">'+txt+'</p>';}
+
+function ireCard(s,P){
+  var rad=54,circ=2*Math.PI*rad;
+  return '<div style="display:flex;align-items:center;gap:20px;margin-bottom:12px">'+
+    '<div style="position:relative;width:110px;height:110px;flex:0 0 110px">'+
+      '<svg width="110" height="110" viewBox="0 0 110 110" style="transform:rotate(-90deg)">'+
+        '<circle cx="55" cy="55" r="'+rad+'" fill="none" stroke="rgba(98,21,19,.1)" stroke-width="7"/>'+
+        '<circle id="ring2" cx="55" cy="55" r="'+rad+'" fill="none" stroke="var(--vinho)" stroke-width="7" stroke-dasharray="'+circ+'" stroke-dashoffset="'+circ+'"/>'+
+      '</svg>'+
+      '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">'+
+        '<b id="iren2" style="font-family:Sulphur Point,sans-serif;font-size:2.2rem;font-weight:700;line-height:1;color:var(--vinho)">0</b>'+
+        '<span style="font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:2px">IRE®</span>'+
+      '</div>'+
+    '</div>'+
+    '<div>'+
+      '<div style="font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">'+esc(P.band)+'</div>'+
+      '<div style="font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.2rem;line-height:1.14;color:var(--vinho)">'+esc(P.name)+'</div>'+
+    '</div>'+
+  '</div>'+
+  '<div style="background:rgba(98,21,19,.05);border-left:2px solid var(--terracota);padding:14px 16px;margin:12px 0 20px">'+
+    '<p style="font-size:.95rem;font-weight:700;color:var(--vinho);margin:0 0 6px">O que é o IRE®?</p>'+
+    p('Desenvolvido pela EUBE para medir a tendência da sua pele de transformar inflamações em manchas persistentes. Não é sobre as manchas que você vê hoje. É sobre entender por que sua pele reage mais, para que ela reaja menos e manche menos.')+
+    '<p style="font-size:.98rem;line-height:1.65;color:rgba(98,21,19,.78);font-weight:300;margin:0 0 14px">Pele negra não é pele branca com mais melanina. Ela tem uma fisiologia diferente, uma resposta inflamatória diferente, e precisa de produtos que foram pensados pra ela desde o começo, não adaptados depois.</p>'+
+    '<p style="font-size:.98rem;line-height:1.65;color:rgba(98,21,19,.78);font-weight:300;margin:0">A tecnologia Advanced Melanin foi desenvolvida exclusivamente com base no comportamento da pele negra.</p>'+
+  '</div>';
+}
+
+function prodHcard(){
+  return '<div style="background:var(--vinho);padding:22px;margin:12px 0;border-left:4px solid var(--terracota)">'+
+    '<p style="font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--terracota);font-weight:600;margin:0 0 8px">CONTROLAR A REATIVIDADE</p>'+
+    '<p style="font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.15rem;color:var(--offwhite);margin:0 0 10px">Hidratante Equilibrante</p>'+
+    '<p style="font-size:.95rem;line-height:1.6;color:rgba(237,235,220,.78);font-weight:300;margin:0 0 14px">Criado pra pele negra, que mancha com facilidade. Ele não apenas hidrata. Acalma a resposta inflamatória que alimenta o Ciclo das Manchas, combate a perda de água elevada na pele negra e repõe as ceramidas que a sua pele produz em menor quantidade. Quando a barreira está comprometida, qualquer inflamação abre uma porta pra mais manchas. O Hidratante fecha essa porta.</p>'+
+    '<ul style="list-style:none;margin:0">'+
+      '<li style="display:flex;gap:8px;font-size:.92rem;color:rgba(237,235,220,.9);padding:6px 0;border-bottom:1px solid rgba(237,235,220,.1)"><span style="color:var(--terracota);font-weight:700;flex:0 0 12px">✔</span>Acalma a resposta inflamatória que alimenta o ciclo</li>'+
+      '<li style="display:flex;gap:8px;font-size:.92rem;color:rgba(237,235,220,.9);padding:6px 0;border-bottom:1px solid rgba(237,235,220,.1)"><span style="color:var(--terracota);font-weight:700;flex:0 0 12px">✔</span>Repõe as ceramidas que a sua pele produz em menor quantidade</li>'+
+      '<li style="display:flex;gap:8px;font-size:.92rem;color:rgba(237,235,220,.9);padding:6px 0"><span style="color:var(--terracota);font-weight:700;flex:0 0 12px">✔</span>Fecha a porta pra mais manchas. O ciclo perde força.</li>'+
+    '</ul>'+
+    '<p style="font-size:.82rem;color:rgba(237,235,220,.45);margin:12px 0 0">Sem barreira íntegra, o ciclo não para.</p>'+
+  '</div>';
+}
+
+function prodUcard(){
+  return '<div style="background:var(--vinho);padding:22px;margin:12px 0;border-left:4px solid var(--terracota)">'+
+    '<p style="font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--terracota);font-weight:600;margin:0 0 8px">REGULAR A MELANINA</p>'+
+    '<p style="font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.15rem;color:var(--offwhite);margin:0 0 10px">Uniformizador Multifuncional Avançado</p>'+
+    '<p style="font-size:.95rem;line-height:1.6;color:rgba(237,235,220,.78);font-weight:300;margin:0 0 14px">A maioria dos clareadores foi feita pra pele branca e adaptada depois. O Uniformizador foi criado do zero pra pele negra que mancha. Mais de 7 ativos que agem em todas as etapas do Ciclo das Manchas. Sem ingredientes agressivos que irritam e geram mais manchas.</p>'+
+    '<ul style="list-style:none;margin:0">'+
+      '<li style="display:flex;gap:8px;font-size:.92rem;color:rgba(237,235,220,.9);padding:6px 0;border-bottom:1px solid rgba(237,235,220,.1)"><span style="color:var(--terracota);font-weight:700;flex:0 0 12px">✔</span>Uniformiza manchas existentes sem agredir a pele</li>'+
+      '<li style="display:flex;gap:8px;font-size:.92rem;color:rgba(237,235,220,.9);padding:6px 0;border-bottom:1px solid rgba(237,235,220,.1)"><span style="color:var(--terracota);font-weight:700;flex:0 0 12px">✔</span>Reduz a frequência com que novas manchas aparecem</li>'+
+      '<li style="display:flex;gap:8px;font-size:.92rem;color:rgba(237,235,220,.9);padding:6px 0"><span style="color:var(--terracota);font-weight:700;flex:0 0 12px">✔</span>Formulado pra respeitar a sensibilidade da pele negra</li>'+
+    '</ul>'+
+    '<p style="font-size:.82rem;color:rgba(237,235,220,.45);margin:12px 0 0">Tratamento avançado para pele negra: trata, regula e previne novas manchas.</p>'+
+  '</div>';
+}
+
+
+function quoteBeforePhoto(){
+  return '<div class="quote" style="margin:28px 0 20px">&ldquo;Passei anos tentando clarear minhas manchas. Só depois que entendi que minha pele era altamente reativa consegui mudar minha rotina.&rdquo;<span>Juliana Almeida · IRE 76 · 60 dias de protocolo</span></div>'+
+    '<div style="font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.5rem;line-height:1.16;color:var(--vinho);margin:0 0 14px">Você não está sozinha.</div>'+
+    '<p style="font-size:1rem;line-height:1.65;color:rgba(98,21,19,.8);font-weight:300;margin:0 0 12px">8 em cada 10 pessoas de pele negra têm uma resposta mais intensa às inflamações. É isso que faz a pele marcar fácil e demorar pra clarear.</p>'+
+    '<p style="font-size:1rem;line-height:1.65;color:rgba(98,21,19,.8);font-weight:300;margin:0 0 16px">Não é descuido seu, é a melanina fazendo o que sabe: te proteger. O que faltou até hoje foram produtos pensados para a fisiologia da pele negra.</p>'+
+    '<div style="border-left:3px solid var(--vinho);padding:12px 16px;margin:0 0 8px;background:rgba(98,21,19,.04)"><p style="font-size:1rem;line-height:1.55;font-weight:600;color:var(--vinho);margin:0">Continua o teste pra descobrir o que mantém o seu Ciclo das Manchas ativo e o que ajuda a manter a sua pele mais uniforme por mais tempo.</p></div>';
+}
+
+// ── Tela 2 section helpers ───────────────────────────────────────────────────
+
+function SL(txt){
+  return '<p style="font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--vinho);display:flex;align-items:center;gap:8px;margin:0 0 12px">'+
+    '<span style="width:16px;height:1px;background:var(--vinho);flex:0 0 16px"></span>'+esc(txt)+'</p>';
+}
+
+function padraoSec(P){
+  return '<div>'+
+    SL('É um padrão de resposta da sua pele')+
+    '<p style="font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.35rem;line-height:1.18;color:var(--vinho);margin:0 0 14px">'+esc(P.name)+'</p>'+
+    p(esc(P.summary))+
+    '<ul style="list-style:none;margin:10px 0 0">'+
+      '<li style="display:flex;align-items:flex-start;gap:10px;font-size:.95rem;line-height:1.55;color:rgba(98,21,19,.8);padding:10px 0;border-bottom:1px solid var(--line)"><span style="width:5px;height:5px;background:var(--terracota);flex:0 0 5px;margin-top:8px;border-radius:50%"></span>'+esc(P.pR)+'</li>'+
+      '<li style="display:flex;align-items:flex-start;gap:10px;font-size:.95rem;line-height:1.55;color:rgba(98,21,19,.8);padding:10px 0;border-bottom:1px solid var(--line)"><span style="width:5px;height:5px;background:var(--terracota);flex:0 0 5px;margin-top:8px;border-radius:50%"></span>'+esc(P.pM)+'</li>'+
+      '<li style="display:flex;align-items:flex-start;gap:10px;font-size:.95rem;line-height:1.55;color:rgba(98,21,19,.8);padding:10px 0"><span style="width:5px;height:5px;background:var(--terracota);flex:0 0 5px;margin-top:8px;border-radius:50%"></span>'+esc(P.pC)+'</li>'+
+    '</ul>'+
+  '</div>';
+}
+
+function ondeAgora(f,pi){
+  var faseAtiva=(f===0);
+  var txt='';
+  if(pi<=1){
+    txt='<p style="font-size:1rem;line-height:1.65;font-weight:300;color:rgba(98,21,19,.8);margin:0 0 12px">Sua pele ainda não desenvolveu um padrão contínuo de manchas. Isso é uma vantagem. O que você fizer agora determina se o ciclo se forma ou não.</p>';
+  } else if(pi===2){
+    txt=faseAtiva ?
+      '<p style="font-size:1rem;line-height:1.65;font-weight:300;color:rgba(98,21,19,.8);margin:0 0 12px">Sua pele ainda está em resposta inflamatória. Há gatilhos ativos, e o ciclo está começando a se formar. Esse é o momento de agir antes que o padrão se consolide.</p>' :
+      '<p style="font-size:1rem;line-height:1.65;font-weight:300;color:rgba(98,21,19,.8);margin:0 0 12px">A inflamação reduziu, mas as manchas que ficaram são o sinal de que o ciclo já operou. Agora é o momento de trabalhar o que ficou antes que novas inflamações reiniciem tudo.</p>';
+  } else if(pi===3){
+    txt=faseAtiva ?
+      '<p style="font-size:1rem;line-height:1.65;font-weight:300;color:rgba(98,21,19,.8);margin:0 0 12px">Sua pele está em resposta inflamatória ativa. Cada nova inflamação alimenta o ciclo antes que o anterior termine. O foco agora é reduzir essa alimentação contínua. Controlar a reatividade antes de trabalhar as manchas que já estão lá.</p>' :
+      '<p style="font-size:1rem;line-height:1.65;font-weight:300;color:rgba(98,21,19,.8);margin:0 0 12px">A fase aguda passou. Mas as manchas que ficaram são muitas, e o ciclo pode reiniciar com qualquer nova inflamação. É o momento de trabalhar a regulação da melanina enquanto a janela ainda está aberta.</p>';
+  } else {
+    txt=faseAtiva ?
+      '<p style="font-size:1rem;line-height:1.65;font-weight:300;color:rgba(98,21,19,.8);margin:0 0 12px">Sua pele está em resposta inflamatória intensa. O ciclo se alimenta de forma contínua. As duas frentes precisam ser tratadas ao mesmo tempo: controlar a reatividade e trabalhar as manchas que já se acumularam.</p>' :
+      '<p style="font-size:1rem;line-height:1.65;font-weight:300;color:rgba(98,21,19,.8);margin:0 0 12px">A fase mais aguda parece ter passado. Mas as manchas que ficaram são muitas, e a pele ainda reage facilmente, e o ciclo continua se alimentando mesmo sem acne ativa. É o padrão mais comum em peles com reatividade alta e persistente.</p>';
+  }
+  return '<div>'+SL('Onde a sua pele está agora')+txt+'</div>';
+}
+
+function erroSec(pi){
+  if(pi<=1){
+    return '<div>'+SL('O erro mais comum em pele negra')+
+      p('Esperar o problema aparecer pra começar a cuidar. Pele negra que mancha não acorda manchada. Chega lá por acúmulo. Cada inflamação que não encontra uma barreira íntegra tem mais chance de virar mancha. Quando o ciclo se firma, é muito mais difícil de interromper do que de prevenir.')+
+    '</div>';
+  }
+  return '<div>'+SL('O erro mais comum em pele negra')+
+    p('Focar só em clarear as manchas sem considerar como a pele reage. Enquanto a reatividade não é controlada, novas manchas continuam surgindo e reiniciam o ciclo antes de qualquer resultado aparecer. O problema não é apenas cuidar das manchas. É o quanto a pele consegue permanecer uniforme antes de reiniciar o ciclo.')+
+  '</div>';
+}
+
+function cicloPerfil(pi){
+  // pi 0..4 → intensidade do ciclo (preenchimento dos discos)
+  var fill=['none','rgba(244,99,58,.30)','rgba(244,99,58,.55)','rgba(244,99,58,.82)','var(--terracota)'][pi];
+  var border=(pi===0)?'2px solid rgba(244,99,58,.55)':'2px solid var(--terracota)';
+  var numCol=(pi>=4)?'var(--vinho)':'var(--offwhite)';
+  var intens=['praticamente parado','gira devagar','já se repete','gira sem parar','se retroalimenta'][pi];
+  var caps=[
+    'A sua pele quase não entra nesse ciclo. Quando marca, some sozinho.',
+    'O ciclo aparece de vez em quando, mas some antes de virar hábito.',
+    'O ciclo começou a girar. A mancha antiga ainda está lá quando a nova chega.',
+    'O ciclo não para. Cada volta deixa a sua pele marcando mais fácil.',
+    'O ciclo virou rotina. Some uma mancha, já tem outra chegando.'
+  ];
+  var steps=['Vem uma espinha ou irritação','A pele escurece naquele ponto','A mancha demora a sair'];
+  var dot=function(n,label){
+    return '<div style="flex:1;text-align:center;position:relative">'+
+      '<div style="width:52px;height:52px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.3rem;background:'+fill+';border:'+border+';color:'+numCol+'">'+n+'</div>'+
+      '<div style="font-size:.82rem;line-height:1.35;color:var(--offwhite);font-weight:500;padding:0 4px">'+label+'</div>'+
+      (n<3?'<div style="position:absolute;top:24px;right:-6px;color:var(--terracota);font-size:1.1rem;line-height:1;font-weight:700">→</div>':'')+
+    '</div>';
+  };
+  return '<div style="background:var(--vinho);padding:24px 20px;margin:8px 0 22px">'+
+    '<p style="font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--terracota);display:flex;align-items:center;gap:8px;margin:0 0 20px"><span style="width:14px;height:1px;background:var(--terracota);display:inline-block;flex:0 0 14px"></span>O Ciclo das Manchas</p>'+
+    '<div style="display:flex;align-items:flex-start;gap:0;margin:0 0 20px">'+dot(1,steps[0])+dot(2,steps[1])+dot(3,steps[2])+'</div>'+
+    '<div style="display:flex;align-items:center;gap:12px;border-top:1px solid rgba(237,235,220,.15);padding-top:16px">'+
+      '<span style="width:26px;height:26px;border-radius:50%;border:2px solid var(--terracota);flex:0 0 26px;display:flex;align-items:center;justify-content:center;color:var(--terracota);font-size:.9rem">↻</span>'+
+      '<span style="font-size:.92rem;line-height:1.4;color:rgba(237,235,220,.75);font-weight:300">No seu perfil, esse ciclo <b style="font-weight:600;color:var(--terracota)">'+intens+'</b>.</span>'+
+    '</div>'+
+    '<p style="font-size:.88rem;line-height:1.5;color:rgba(237,235,220,.72);font-weight:300;margin:14px 0 0">'+caps[pi]+'</p>'+
+  '</div>';
+}
+
+function fisioCard(big,small){
+  return '<div style="background:#fff;border:1px solid var(--line);padding:14px">'+
+    '<div style="font-family:Sulphur Point,sans-serif;font-size:1.35rem;font-weight:700;color:var(--terracota);line-height:1">'+big+'</div>'+
+    '<div style="font-size:.82rem;line-height:1.45;color:rgba(98,21,19,.68);font-weight:300;margin-top:7px">'+small+'</div>'+
+  '</div>';
+}
+
+function ninguemSec(){
+  return '<div>'+SL('O que ninguém te explicou sobre a sua pele')+
+    '<p style="font-size:1rem;line-height:1.65;font-weight:300;color:rgba(98,21,19,.8);margin:0 0 16px">A pele negra não é pele branca com mais melanina. Ela funciona de um jeito diferente. E isso muda tudo sobre como cuidar dela.</p>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 4px">'+
+      fisioCard('−ceramidas','Barreira mais frágil. Perde água e reage a qualquer agressão.')+
+      fisioCard('+melanina','Melanócitos que demoram mais pra desligar. Espinha vira mancha.')+
+      fisioCard('+descamação','Acelera a perda de barreira e a sensibilidade.')+
+      fisioCard('UV','Proteção natural maior, mas não imune. O sol intensifica o ciclo.')+
+    '</div>'+
+  '</div>';
+}
+
+function mudaSec(){
+  return '<div>'+SL('O que muda a partir de agora')+
+    p('Você passa a entender o sistema, não só os sintomas. Quando a rotina é construída pra interromper o ciclo, controlando a reatividade e regulando a melanina ao mesmo tempo, as manchas passam a responder melhor. Novas marcas aparecem com menos frequência. A rotina fica mais previsível.')+
+  '</div>';
+}
+
+function eubeSec(){
+  return '<div style="background:var(--vinho);padding:24px 20px;margin:8px 0">'+
+    '<p style="font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.45rem;line-height:1.16;color:var(--offwhite);margin:0 0 14px">A EUBE foi criada pra pele que o mercado sempre ignorou.</p>'+
+    '<p style="font-size:1rem;line-height:1.6;color:rgba(237,235,220,.78);font-weight:300;margin:0 0 12px">Pele negra não é pele branca com mais melanina. Ela tem uma fisiologia diferente, uma resposta inflamatória diferente, e precisa de produtos pensados pra ela desde o começo. Não adaptados depois.</p>'+
+    '<p style="font-size:1rem;line-height:1.6;color:rgba(237,235,220,.78);font-weight:300;margin:0">A tecnologia Advanced Melanin™ foi desenvolvida exclusivamente com base no comportamento da pele negra. Não é adaptação. É origem.</p>'+
+  '</div>';
+}
+
+// ── end Tela 2 section helpers ────────────────────────────────────────────────
+
+function mudaFinalSec(){
+  return '<div style="background:rgba(98,21,19,.06);padding:28px 20px;margin:28px 0">'+
+    SL("O que muda quando o cuidado é feito pra você")+
+    '<p style="font-family:Sulphur Point,sans-serif;font-size:1.3rem;font-weight:700;color:var(--vinho);line-height:1.2;margin:0 0 14px">Pele que mancha menos é pele que reage menos.</p>'+
+    p('Quando você interrompe esse ciclo:')+
+    ul(['As manchas começam a perder intensidade.','Você interrompe o ciclo de surgimento de novas manchas.','Sua rotina deixa de ser uma corrida atrás do prejuízo.'],'var(--vinho)')+
+    '<p style="font-size:1rem;line-height:1.55;font-weight:600;color:var(--vinho);margin:16px 0 0">Comece hoje a interromper esse ciclo.</p>'+
+  '</div>';
+}
+
+function cupom(){
+  return '<div style="border:1.5px dashed var(--vinho);padding:18px;margin:20px 0;text-align:center">'+
+    '<p style="font-family:Sulphur Point,sans-serif;font-size:1.5rem;letter-spacing:.1em;color:var(--vinho);margin:0">EUBE10</p>'+
+    '<p style="font-size:.85rem;color:var(--muted);margin:4px 0 0">Um presente da EUBE pra você começar.</p>'+
+  '</div>';
+}
+
+function renderResult2(s,pi,P,f,ctaLabel){
+  var rad=76,circ=2*Math.PI*rad;
+  var prodSection='';
+  var hasDualProd=(pi>=3);
+
+  var faseAtiva=(f===0), fasePrev=(f===3);
+  if(pi<=1){
+    prodSection=SL("O que a sua pele precisa agora")+
+      p(fasePrev
+        ? 'Você chegou antes do ciclo começar. Manter a barreira forte agora é o que impede que qualquer inflamação vire a primeira mancha. É prevenção, não correção.'
+        : 'Pele negra em equilíbrio tem uma vulnerabilidade específica: a barreira. Quando ela enfraquece, qualquer inflamação ativa a melanina além do necessário. É assim que o equilíbrio se perde.')+
+      prodHcard()+cupom();
+  } else if(pi===2){
+    if(faseAtiva){
+      prodSection=SL("O que a sua pele precisa agora")+
+        p('No seu estágio, começar pelo clareamento reinicia o ciclo antes de qualquer resultado aparecer. O caminho começa pelo controle da reatividade.')+
+        prodHcard();
+    } else {
+      prodSection=SL("O que a sua pele precisa agora")+
+        p('A fase mais intensa passou. As manchas que ficaram são agora o desafio principal. É o momento certo pra trabalhar a regulação da melanina.')+
+        prodUcard();
+    }
+  } else {
+    prodSection=SL("O que a sua pele precisa agora")+
+      p('Sua pele precisa trabalhar duas frentes ao mesmo tempo.')+
+      prodUcard()+
+      IMGRESULT+
+      (pi===4?'<p style="font-size:.95rem;line-height:1.55;color:rgba(98,21,19,.72);font-weight:300;margin:8px 0 12px">No estágio '+esc(P.name.toLowerCase())+', a barreira está comprometida de forma contínua. Restaurá-la é o que permite que o Uniformizador funcione. Sem barreira íntegra, qualquer ativo enfrenta mais resistência e mais risco de irritação.</p>':'')+
+      prodHcard();
+  }
+
+  var html='<div class="screen">'+
+    '<div class="eyebrow eyebrow-agua" style="margin-bottom:20px">O que está por trás do seu IRE®</div>'+
+
+    // gauge grande centralizado — abertura da Tela 2
+    '<div style="display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:6px">'+
+      '<div style="position:relative;width:180px;height:180px;margin-bottom:6px">'+
+        '<svg width="180" height="180" viewBox="0 0 180 180" style="transform:rotate(-90deg)">'+
+          '<circle cx="90" cy="90" r="'+rad+'" fill="none" stroke="rgba(98,21,19,.09)" stroke-width="10"/>'+
+          '<circle id="ring2" cx="90" cy="90" r="'+rad+'" fill="none" stroke="var(--terracota)" stroke-width="10" stroke-linecap="round" stroke-dasharray="'+circ+'" stroke-dashoffset="'+circ+'"/>'+
+        '</svg>'+
+        '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">'+
+          '<b id="iren2" style="font-family:Sulphur Point,sans-serif;font-size:3.4rem;font-weight:700;line-height:.9;color:var(--vinho)">0</b>'+
+          '<span style="font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:4px">IRE®</span>'+
+        '</div>'+
+      '</div>'+
+      '<div style="font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--terracota);font-weight:600;margin-bottom:5px">'+esc(P.band)+'</div>'+
+      '<div style="font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.5rem;line-height:1.1;color:var(--vinho)">'+esc(P.name)+'</div>'+
+    '</div>'+
+
+    // IRE definition box
+    '<div style="background:rgba(98,21,19,.05);border-left:2px solid var(--terracota);padding:22px 22px;margin:0 0 24px">'+
+      '<p style="font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--terracota);margin:0 0 12px">O que é o IRE®</p>'+
+      '<p style="font-size:.98rem;line-height:1.7;color:var(--vinho);font-weight:400;margin:0 0 14px">Desenvolvido pela EUBE para medir a tendência da sua pele negra de transformar inflamações em manchas persistentes.</p>'+
+      '<p style="font-size:.92rem;line-height:1.7;color:rgba(98,21,19,.7);font-weight:300;margin:0">Não é sobre as manchas que você vê hoje. É sobre entender por que a sua pele reage mais, para que ela <b style="font-weight:600;color:var(--terracota)">reaja menos e manche menos</b>.</p>'+
+    '</div>'+
+
+    // pillars
+    '<div id="pillar-wrap">'+pillarRow2("R","Controle da Reatividade","c-reat",s.R)+pillarRow2("M","Regulação da Melanina","c-mel",s.M)+pillarRow2("C","Ciclo das Manchas","c-ciclo",s.C)+'</div>'+
+
+    DIV+
+    padraoSec(P)+
+    ondeAgora(f,pi)+
+    cicloPerfil(pi)+
+    DIV+
+    erroSec(pi)+
+    ninguemSec()+
+    DIV+
+    mudaSec()+
+    eubeSec()+
+    DIV+
+    prodSection+
+    (pi<=2&&pi>=2?IMGRESULT:'')+
+    DIV+
+    mudaFinalSec()+
+    DIV+
+    '<p style="font-size:1.05rem;line-height:1.5;font-weight:600;color:var(--vinho);margin-bottom:16px;text-align:center">Conheça o produto desenvolvido para peles negras que mancham.</p>'+
+    '<a class="cta" href="#" onclick="return false">'+esc(ctaLabel)+'</a>'+
+    +
+    '<button class="restart" id="restart2" style="margin-top:20px">refazer o diagnóstico</button>'+
+  '</div>';
+
+  app.innerHTML=html;
+
+  setTimeout(function(){
+    var ring=document.getElementById("ring2"),iren=document.getElementById("iren2");
+    if(ring){ring.style.transition="stroke-dashoffset 1.2s cubic-bezier(.2,.7,.3,1)";ring.style.strokeDashoffset=(circ*(1-s.ire/100));}
+    var t0=null;function tick(ts){if(!t0)t0=ts;var p2=Math.min(1,(ts-t0)/1200);if(iren)iren.textContent=Math.round(s.ire*p2);if(p2<1)requestAnimationFrame(tick);}
+    requestAnimationFrame(tick);
+    var bars=document.querySelectorAll("#pillar-wrap [data-w]");
+    for(var i=0;i<bars.length;i++) bars[i].style.width=bars[i].getAttribute("data-w")+"%";
+  },200);
+
+  document.getElementById("restart2").onclick=function(){state={step:0,name:"",whatsapp:"",email:"",answers:{}};quizSid=uuid();go(0);};
+}
+
+function logResult(){
+  var s=scores();
+  var FLAB=["acne ativa","transição","mancha antiga","prevenção"];
+  var corLab=["marrom","avermelhada","acinzentada","misto"];
+  console.log("EUBE IRE®",{sid:quizSid,name:state.name,email:state.email,wa:state.whatsapp,
+    R:s.R,M:s.M,C:s.C,ire:s.ire,profile:PROFILES[bnd(s.ire)].name,
+    fase:FLAB[fase()],dor:state.answers.k3,cor:(state.answers.cor!=null?corLab[state.answers.cor]:null),
+    answers:state.answers});
+}
+
+go(0);
+})();
+</script>
+</body>
+</html>
