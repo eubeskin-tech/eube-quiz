@@ -863,11 +863,7 @@ function padraoSec(P){
     SL('É um padrão de resposta da sua pele')+
     '<p style="font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.35rem;line-height:1.18;color:var(--vinho);margin:0 0 14px">'+esc(P.name)+'</p>'+
     p(esc(P.summary))+
-    '<ul style="list-style:none;margin:10px 0 0">'+
-      '<li style="display:flex;align-items:flex-start;gap:10px;font-size:.95rem;line-height:1.55;color:rgba(98,21,19,.8);padding:10px 0;border-bottom:1px solid var(--line)"><span style="width:5px;height:5px;background:var(--terracota);flex:0 0 5px;margin-top:8px;border-radius:50%"></span>'+esc(P.pR)+'</li>'+
-      '<li style="display:flex;align-items:flex-start;gap:10px;font-size:.95rem;line-height:1.55;color:rgba(98,21,19,.8);padding:10px 0;border-bottom:1px solid var(--line)"><span style="width:5px;height:5px;background:var(--terracota);flex:0 0 5px;margin-top:8px;border-radius:50%"></span>'+esc(P.pM)+'</li>'+
-      '<li style="display:flex;align-items:flex-start;gap:10px;font-size:.95rem;line-height:1.55;color:rgba(98,21,19,.8);padding:10px 0"><span style="width:5px;height:5px;background:var(--terracota);flex:0 0 5px;margin-top:8px;border-radius:50%"></span>'+esc(P.pC)+'</li>'+
-    '</ul>'+
+    '<p style="font-size:1rem;line-height:1.6;font-weight:400;color:var(--vinho);margin:14px 0 0">O problema não é apenas a espinha. É a mancha que fica muito depois dela sumir.</p>'+
   '</div>';
 }
 
@@ -987,6 +983,54 @@ function cupom(){
   '</div>';
 }
 
+// ── Blocos fundidos da Tela 2 (versão enxuta) ──
+
+function blocoPorque(f,pi){
+  // localização da fase, curta
+  var faseAtiva=(f===0);
+  var loc;
+  if(pi<=1){
+    loc='Sua pele ainda não firmou um padrão de manchas. Isso é uma vantagem. O que você faz agora decide se o ciclo se forma ou não.';
+  } else if(pi===2){
+    loc=faseAtiva
+      ? 'Ainda há inflamação ativa e o ciclo está começando a se formar. É a hora de agir antes que o padrão se firme.'
+      : 'A inflamação reduziu, mas as manchas que ficaram mostram que o ciclo já operou. É hora de tratar o que ficou antes que reinicie.';
+  } else if(pi===3){
+    loc=faseAtiva
+      ? 'Sua pele está em resposta ativa. Cada nova inflamação alimenta o ciclo antes do anterior terminar.'
+      : 'A fase aguda passou, mas as manchas que ficaram são muitas, e a pele ainda reage com facilidade. É o padrão mais comum em pele de alta reatividade.';
+  } else {
+    loc=faseAtiva
+      ? 'Sua pele está em resposta intensa e o ciclo se alimenta sem parar. As duas frentes precisam ser tratadas ao mesmo tempo.'
+      : 'A fase mais aguda passou, mas as manchas se acumularam e a pele reage a qualquer coisa. O ciclo continua girando mesmo sem acne ativa.';
+  }
+  return '<div style="padding:0 20px">'+
+    '<p style="font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--terracota);display:flex;align-items:center;gap:8px;margin:0 0 6px"><span style="width:20px;height:20px;border-radius:50%;background:var(--terracota);color:var(--offwhite);display:flex;align-items:center;justify-content:center;font-size:.66rem;flex:0 0 20px">1</span>Por que a sua pele faz isso</p>'+
+    '<p style="font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.5rem;line-height:1.15;color:var(--vinho);margin:0 0 14px">Não é descuido seu. É como a pele negra funciona.</p>'+
+    '<p style="font-size:1rem;line-height:1.6;font-weight:300;color:rgba(98,21,19,.8);margin:0 0 8px">'+esc(loc)+'</p>'+
+    '<p style="font-size:1rem;line-height:1.6;font-weight:300;color:rgba(98,21,19,.8);margin:0">Focar só em clarear, sem controlar como a pele reage, é o erro mais comum. Enquanto a reatividade não é tratada, novas manchas surgem e reiniciam o ciclo antes de qualquer resultado aparecer.</p>'+
+  '</div>';
+}
+
+function blocoFisio(){
+  return '<div style="padding:0 20px">'+
+    '<p style="font-size:1rem;line-height:1.6;font-weight:300;color:rgba(98,21,19,.8);margin:0 0 16px">A pele negra não é pele branca com mais melanina. Ela funciona de outro jeito, e isso muda tudo sobre como cuidar dela.</p>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0">'+
+      fisioCard('−ceramidas','Barreira mais frágil. Perde água e reage a qualquer agressão.')+
+      fisioCard('+melanina','Qualquer irritação vira uma mancha que demora pra sair.')+
+      fisioCard('+descamação','Acelera a perda de barreira e a sensibilidade.')+
+      fisioCard('UV','Proteção natural maior, mas não imune. O sol intensifica o ciclo.')+
+    '</div>'+
+  '</div>';
+}
+
+function fechoUnico(){
+  return '<div style="text-align:center;padding:28px 20px 0">'+
+    '<p style="font-family:Sulphur Point,sans-serif;font-size:1.35rem;font-weight:700;color:var(--vinho);line-height:1.2;margin:0 0 10px">Pele que mancha menos é pele que reage menos.</p>'+
+    '<p style="font-size:1rem;line-height:1.55;font-weight:400;color:rgba(98,21,19,.8);margin:0">Comece hoje a interromper esse ciclo.</p>'+
+  '</div>';
+}
+
 function renderResult2(s,pi,P,f,ctaLabel){
   var rad=76,circ=2*Math.PI*rad;
   var prodSection='';
@@ -1037,35 +1081,30 @@ function renderResult2(s,pi,P,f,ctaLabel){
       '<div style="font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.5rem;line-height:1.1;color:var(--vinho)">'+esc(P.name)+'</div>'+
     '</div>'+
 
-    // IRE definition box
-    '<div style="background:rgba(98,21,19,.05);border-left:2px solid var(--terracota);padding:22px 22px;margin:0 0 24px">'+
-      '<p style="font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--terracota);margin:0 0 12px">O que é o IRE®</p>'+
-      '<p style="font-size:.98rem;line-height:1.7;color:var(--vinho);font-weight:400;margin:0 0 14px">Desenvolvido pela EUBE para medir a tendência da sua pele negra de transformar inflamações em manchas persistentes.</p>'+
-      '<p style="font-size:.92rem;line-height:1.7;color:rgba(98,21,19,.7);font-weight:300;margin:0">Não é sobre as manchas que você vê hoje. É sobre entender por que a sua pele reage mais, para que ela <b style="font-weight:600;color:var(--terracota)">reaja menos e manche menos</b>.</p>'+
+    // IRE definition box (versão enxuta)
+    '<div style="background:rgba(98,21,19,.05);border-left:2px solid var(--terracota);padding:18px 20px;margin:0 0 22px">'+
+      '<p style="font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--terracota);margin:0 0 8px">O que é o IRE®</p>'+
+      '<p style="font-size:.95rem;line-height:1.6;color:rgba(98,21,19,.78);font-weight:300;margin:0">Mede a tendência da sua pele negra de transformar inflamações em manchas que ficam. Quanto mais alto, mais a sua pele reage, e mais ela marca.</p>'+
     '</div>'+
 
     // pillars
     '<div id="pillar-wrap">'+pillarRow2("R","Controle da Reatividade","c-reat",s.R)+pillarRow2("M","Regulação da Melanina","c-mel",s.M)+pillarRow2("C","Ciclo das Manchas","c-ciclo",s.C)+'</div>'+
 
     DIV+
-    padraoSec(P)+
-    ondeAgora(f,pi)+
+
+    // ── BLOCO 1 · por que acontece (erro + fisiologia + ciclo + cards) ──
+    blocoPorque(f,pi)+
     cicloPerfil(pi)+
+    blocoFisio()+
+
     DIV+
-    erroSec(pi)+
-    ninguemSec()+
-    DIV+
-    mudaSec()+
+
+    // ── BLOCO 2 · solução (EUBE origem + produtos + fecho) ──
     eubeSec()+
-    DIV+
     prodSection+
-    (pi<=2&&pi>=2?IMGRESULT:'')+
-    DIV+
-    mudaFinalSec()+
-    DIV+
-    '<p style="font-size:1.05rem;line-height:1.5;font-weight:600;color:var(--vinho);margin-bottom:16px;text-align:center">Conheça o produto desenvolvido para peles negras que mancham.</p>'+
+    fechoUnico()+
+
     '<a class="cta" href="#" onclick="return false">'+esc(ctaLabel)+'</a>'+
-    +
     '<button class="restart" id="restart2" style="margin-top:20px">refazer o diagnóstico</button>'+
   '</div>';
 
@@ -1085,7 +1124,7 @@ function renderResult2(s,pi,P,f,ctaLabel){
 
 // ── Endpoint de captura (Apps Script Web App) ──
 // Cole aqui a URL /exec que o Apps Script gerar no deploy.
-var EUBE_ENDPOINT = "https://script.google.com/macros/s/AKfycby9yBnhuQ-YwUc_mt0u-EovFoLp73w1TkJmdm4_TjKeLDrqvPyXtdL9aklL9UBoG89AJQ/exec";
+var EUBE_ENDPOINT = "https://script.google.com/macros/s/AKfycbxQIiW0i6Jpk4XY6cK2ZohfDCjeUBzNmUgkz39gVDam5TqDs0gbta1gHfyiyCBnSAbXbg/exec";
 
 function eubeParam(name){
   try{ return new URLSearchParams(window.location.search).get(name) || ""; }catch(e){ return ""; }
