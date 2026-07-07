@@ -1037,6 +1037,16 @@ function renderResult2(s,pi,P,f,ctaLabel){
   var hasDualProd=(pi>=3);
 
   var faseAtiva=(f===0), fasePrev=(f===3);
+
+  // URLs das páginas de produto conforme o que é recomendado
+  var URL_UNIF='https://eube.com.br/products/uniformizador-facial-avancado-multifuncional';
+  var URL_HIDRA='https://eube.com.br/products/hidratante-equilibrante';
+  var URL_ROTINA='https://eube.com.br/products/rotina-de-regulacao-da-melanina%E2%84%A2';
+  var ctaHref;
+  if(pi>=3){ ctaHref=URL_ROTINA; }                          // ambos → rotina
+  else if(pi===2 && !faseAtiva){ ctaHref=URL_UNIF; }        // só Uniformizador
+  else { ctaHref=URL_HIDRA; }                               // só Hidratante (pi<=1, ou pi2 fase ativa)
+
   if(pi<=1){
     prodSection=SL("O que a sua pele precisa agora")+
       p(fasePrev
@@ -1104,7 +1114,7 @@ function renderResult2(s,pi,P,f,ctaLabel){
     prodSection+
     fechoUnico()+
 
-    '<a class="cta" href="#" onclick="return false">'+esc(ctaLabel)+'</a>'+
+    '<a class="cta" href="'+ctaHref+'" target="_blank" rel="noopener">'+esc(ctaLabel)+'</a>'+
     '<button class="restart" id="restart2" style="margin-top:20px">refazer o diagnóstico</button>'+
   '</div>';
 
