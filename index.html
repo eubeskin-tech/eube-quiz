@@ -90,7 +90,7 @@ h2{font-family:'Sulphur Point',sans-serif;font-weight:700;font-size:1.85rem;line
 .ba-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
 .ba-slot{position:relative;aspect-ratio:3/4;border:1.5px solid var(--line);background:rgba(98,21,19,.03);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;overflow:hidden}
-.ba-slot:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(98,21,19,.015) 10px,rgba(98,21,19,.015) 20px)}
+.ba-slot:before{content:none}
 .ba-label{position:relative;font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .ba-tag{position:absolute;bottom:10px;left:10px;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
   background:var(--terracota);color:var(--offwhite);padding:3px 8px;font-weight:600}
@@ -321,8 +321,13 @@ var VIRADA_SEC='<div class="rsec reveal"><div class="rsec-lab">O que a gente des
 
 var FECHAMENTO_SEC='<div class="rsec reveal"><div class="rsec-lab">O que ninguém te explicou sobre a sua pele</div>'+FISIOLOGIA+'<p class="body" style="margin-top:10px">O que você descobriu aqui não é só o estado da sua pele. É o padrão que explica por que ela se comporta assim. Agora você não está mais lidando com manchas isoladas. Está lidando com um sistema que pode ser compreendido. E isso muda completamente a forma como você cuida da sua pele daqui pra frente.</p></div>';
 
-function baSlot(labelA,labelB){
-  return '<div class="ba-wrap"><div class="ba-slot"><div class="hp-ic" style="margin-bottom:6px"></div><div class="ba-label">foto</div><div class="ba-tag">Antes</div></div><div class="ba-slot"><div class="hp-ic" style="margin-bottom:6px"></div><div class="ba-label">foto</div><div class="ba-tag ba-tag-a">Depois</div></div></div><p class="ba-meta">'+labelA+' · '+labelB+'</p>';
+function baSlot(labelA,labelB,srcA,srcB){
+  var a=srcA||'images/EUBE_juliana_antes.webp';
+  var b=srcB||'images/EUBE_juliana_depois.webp';
+  return '<div class="ba-wrap">'+
+    '<div class="ba-slot"><img src="'+a+'" alt="Antes" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"><div class="ba-tag">Antes</div></div>'+
+    '<div class="ba-slot"><img src="'+b+'" alt="Depois" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"><div class="ba-tag ba-tag-a">Depois</div></div>'+
+  '</div><p class="ba-meta">'+labelA+' · '+labelB+'</p>';
 }
 
 function hidratanteCard(){
@@ -651,8 +656,8 @@ function imgSlot(label){
 
 function baGrid(caption){
   return '<div class="ba-wrap">'+
-    '<div class="ba-slot"><div class="hp-ic"></div><div class="ba-label">foto</div><div class="ba-tag">Antes</div></div>'+
-    '<div class="ba-slot"><div class="hp-ic"></div><div class="ba-label">foto</div><div class="ba-tag ba-tag-a">Depois</div></div>'+
+    '<div class="ba-slot"><img src="images/EUBE_resultado_antes.webp" alt="Antes" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"><div class="ba-tag">Antes</div></div>'+
+    '<div class="ba-slot"><img src="images/EUBE_resultado_depois.webp" alt="Depois" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"><div class="ba-tag ba-tag-a">Depois</div></div>'+
   '</div><p class="ba-meta">'+caption+'</p>';
 }
 
@@ -781,7 +786,7 @@ var DIV='<div style="height:1px;background:var(--line);margin:32px 0"></div>';
 var IMGSLOT=function(lbl){return '<div style="width:100%;aspect-ratio:16/9;border:1px solid var(--line);background:rgba(98,21,19,.03);display:flex;align-items:center;justify-content:center;margin:24px 0;position:relative"><span style="font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(98,21,19,.28)">'+lbl+'</span></div>';};
 var IMGPERSON=IMGSLOT('imagem · pessoa com pele negra');
 var IMGFISIO=IMGSLOT('imagem · fisiologia da pele negra');
-var IMGRESULT=IMGSLOT('imagem · resultado com o protocolo');
+var IMGRESULT='<img src="images/EUBE_protocolo.webp" alt="Resultado com o protocolo" loading="lazy" decoding="async" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;margin:24px 0">';
 
 function p(txt,mt){return '<p style="font-size:1rem;line-height:1.65;font-weight:300;color:rgba(98,21,19,.8);margin:'+(mt||'0 0 16px')+'">'+txt+'</p>';}
 function pb(txt){return '<p style="font-size:1rem;line-height:1.65;font-weight:400;color:var(--vinho);margin:0 0 16px">'+txt+'</p>';}
