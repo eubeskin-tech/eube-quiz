@@ -81,7 +81,7 @@ h2{font-family:'Sulphur Point',sans-serif;font-weight:700;font-size:1.85rem;line
 .hero-photo{position:relative;width:100%;max-width:180px;aspect-ratio:1/1;border:1.5px solid var(--line);
   background:rgba(98,21,19,.04);
   display:flex;align-items:center;justify-content:center;margin:28px auto 32px;overflow:hidden}
-.hero-photo:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 12px,rgba(98,21,19,.02) 12px,rgba(98,21,19,.02) 24px)}
+.hero-photo:before{content:none}
 .hp-label{position:relative;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
 .hp-ic{width:20px;height:20px;border:1.5px solid var(--muted);display:inline-block;position:relative;flex:0 0 20px}
 .hp-ic:after{content:"";position:absolute;left:3px;bottom:3px;width:7px;height:7px;border-radius:50%;border:1.5px solid var(--muted)}
@@ -551,7 +551,7 @@ function renderIntro(){
     '<div class="eyebrow eyebrow-ora" style="display:inline-block">Seu mapa de reatividade da pele negra</div>'+
     '<h1 style="margin-top:24px">Se a sua <span class="hl-ora">pele negra</span> mancha com facilidade e <span class="hl-ora">demora pra sair</span><span class="h1-sub">este diagnóstico foi feito pra você.</span></h1>'+
     '<p class="lead">Descubra seu Nível de Reatividade (IRE®) e <b>pare de gastar dinheiro testando produto no escuro</b>. Em 2 minutos, você entende como manter a sua pele mais uniforme e saudável por mais tempo.</p>'+
-    '<div class="hero-photo"><div class="hp-label"><span class="hp-ic"></span>foto · 1:1</div></div>'+
+    '<div class="hero-photo"><img src="images/EUBE_quiz_1.webp" alt="Pele negra" loading="eager" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"></div>'+
     '<p class="proof">Milhares de pessoas negras já descobriram um novo jeito de entender a própria pele.</p>'+
     '<button class="cta" id="b">Quero descobrir meu resultado</button></div>';
   document.getElementById("b").onclick=next;
