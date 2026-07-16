@@ -82,6 +82,15 @@ h2{font-family:'Sulphur Point',sans-serif;font-weight:700;font-size:1.85rem;line
   background:rgba(98,21,19,.04);
   display:flex;align-items:center;justify-content:center;margin:28px auto 32px;overflow:hidden}
 .hero-photo:before{content:none}
+/* intro tráfego pago: foto com prova + botão D */
+.intro-photo{position:relative;width:100%;height:230px;overflow:hidden;margin:18px 0;background:var(--vinho)}
+.intro-photo img{width:100%;height:100%;object-fit:cover;object-position:center 22%;display:block}
+.intro-photo .cap{position:absolute;left:0;right:0;bottom:0;padding:24px 16px 12px;background:linear-gradient(transparent,rgba(72,16,15,.85));color:var(--offwhite);font-size:.88rem;line-height:1.35;font-weight:300}
+.intro-photo .cap b{color:#fff;font-weight:600}
+.cta-d-wrap{box-shadow:0 8px 24px rgba(244,99,58,.35);margin-top:4px}
+.cta-d{display:block;width:100%;text-align:center;background:var(--terracota);color:var(--offwhite);font-weight:700;font-size:1.15rem;padding:18px;border:none;cursor:pointer;font-family:'Jost',sans-serif}
+.cta-d-bar{background:var(--vinho);color:var(--offwhite);text-align:center;font-size:.76rem;padding:9px;font-weight:400;letter-spacing:.02em}
+.cta-d-bar b{color:var(--terracota);font-weight:600}
 .hp-label{position:relative;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
 .hp-ic{width:20px;height:20px;border:1.5px solid var(--muted);display:inline-block;position:relative;flex:0 0 20px}
 .hp-ic:after{content:"";position:absolute;left:3px;bottom:3px;width:7px;height:7px;border-radius:50%;border:1.5px solid var(--muted)}
@@ -230,11 +239,12 @@ var QUESTIONS=[
     {label:"Já aconteceu"},
     {label:"Faço isso com frequência"},
     {label:"Isso mudou o jeito que eu me visto"}]},
-  {id:"k2",bloco:1,type:"single",text:"Quantos produtos você já comprou tentando resolver isso?",opts:[
-    {label:"Nenhum ainda"},
-    {label:"Um ou dois"},
-    {label:"Vários, e desisti de contar"},
-    {label:"Já perdi as contas e o dinheiro"}]},
+  {id:"k2",bloco:1,type:"multi",text:"O que você já usou pra tratar as manchas?",help:"Pode marcar mais de uma.",opts:[
+    {label:"Clareadores"},
+    {label:"Ácidos (esfoliantes, peelings)"},
+    {label:"Receitas caseiras"},
+    {label:"Indicação de dermatologista"},
+    {label:"Nunca tratei de verdade"}]},
   {id:"k3",bloco:1,type:"single",text:"O que mais te incomoda hoje?",help:"Sua resposta guia o seu diagnóstico.",opts:[
     {label:"As manchas que já estão na minha pele"},
     {label:"Elas voltarem sempre que uma some"},
@@ -553,12 +563,16 @@ function render(){var st=FLOW[state.step];updateBar();
 
 function renderIntro(){
   app.innerHTML='<div class="screen">'+
-    '<div class="eyebrow eyebrow-ora" style="display:inline-block">Seu mapa de reatividade da pele negra</div>'+
-    '<h1 style="margin-top:24px">Se a sua <span class="hl-ora">pele negra</span> mancha com facilidade e <span class="hl-ora">demora pra sair</span><span class="h1-sub">este diagnóstico foi feito pra você.</span></h1>'+
-    '<p class="lead">Descubra seu Nível de Reatividade (IRE®) e <b>pare de gastar dinheiro testando produto no escuro</b>. Em 2 minutos, você entende como manter a sua pele mais uniforme e saudável por mais tempo.</p>'+
-    '<div class="hero-photo"><img src="images/EUBE_quiz_1.webp" alt="Pele negra" loading="eager" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block"></div>'+
-    '<p class="proof">Milhares de pessoas negras já descobriram um novo jeito de entender a própria pele.</p>'+
-    '<button class="cta" id="b">Quero descobrir meu resultado</button></div>';
+    '<div class="eyebrow eyebrow-ora" style="display:inline-block">Diagnóstico da pele negra · 2 min</div>'+
+    '<h1 style="margin-top:24px">Quer <span class="hl-ora">clarear as manchas</span> mas nada resolve de vez?<span class="h1-sub">Descubra o que realmente funciona pra sua pele negra, sem gastar mais dinheiro testando produto errado.</span></h1>'+
+    '<div class="intro-photo">'+
+      '<img src="images/EUBE_quiz_1.webp" alt="Pele negra" loading="eager" decoding="async">'+
+      '<div class="cap"><b>8 em cada 10</b> pessoas de pele negra reagem mais às inflamações. Descubra a sua.</div>'+
+    '</div>'+
+    '<div class="cta-d-wrap">'+
+      '<button class="cta-d" id="b">Descobrir o que a minha pele precisa</button>'+
+      '<div class="cta-d-bar"><b>Grátis</b> e leva só 2 minutos</div>'+
+    '</div></div>';
   document.getElementById("b").onclick=next;
 }
 
@@ -1066,6 +1080,81 @@ function erroIntro(){
   return '<p style="font-size:1rem;line-height:1.55;font-weight:300;color:rgba(98,21,19,.8);margin:0 0 4px">Focar só em clarear, sem controlar como a pele reage, é o erro mais comum. Enquanto a reatividade não é tratada, novas manchas reiniciam o ciclo antes de qualquer resultado.</p>';
 }
 
+// ── Insights personalizados por resposta (Tela 2) ──
+function skinDiagram(depth,color){
+  // depth: 'epi' | 'derm' | 'both' ; color hex do ponto
+  var c=color||'var(--terracota)';
+  var epiDot=(depth==='epi'||depth==='both')?'<span style="position:absolute;right:16px;top:50%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background:'+c+';box-shadow:0 0 0 4px rgba(244,99,58,.28)"></span><span style="position:absolute;right:38px;top:50%;transform:translateY(-50%);font-size:.53rem;color:#fff;font-weight:600">pigmento aqui</span>':'';
+  var dermDot=(depth==='derm')?'<span style="position:absolute;right:16px;top:50%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background:'+c+';box-shadow:0 0 0 4px rgba(122,138,154,.3)"></span><span style="position:absolute;right:38px;top:50%;transform:translateY(-50%);font-size:.53rem;color:#fff;font-weight:600">pigmento aqui</span>':(depth==='both'?'<span style="position:absolute;right:16px;top:50%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background:#7a8a9a;box-shadow:0 0 0 4px rgba(122,138,154,.3)"></span>':'');
+  return '<div style="margin:12px 0 0"><div style="display:flex;align-items:center;padding:0 12px;color:#fff;font-size:.58rem;font-weight:500;background:#9a6a52;height:46px;position:relative">Epiderme'+epiDot+'</div>'+
+    '<div style="display:flex;align-items:center;padding:0 12px;color:#fff;font-size:.58rem;font-weight:500;background:#5c3a2c;height:38px;position:relative">Derme'+dermDot+'</div></div>';
+}
+function insightCard(lb,take,diagram,punch,bridge){
+  return '<div style="background:#fff;border:1px solid var(--line);margin:0 0 14px;overflow:hidden">'+
+    '<div style="padding:16px 16px 0"><p style="font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--terracota);margin:0 0 7px">'+lb+'</p>'+
+    '<p style="font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.15rem;line-height:1.18;color:var(--vinho);margin:0 0 4px">'+take+'</p></div>'+
+    diagram+
+    '<p style="font-size:.9rem;line-height:1.5;font-weight:300;color:rgba(98,21,19,.75);padding:12px 16px 4px;margin:0">'+punch+'</p>'+
+    (bridge?'<p style="font-size:.9rem;line-height:1.45;font-weight:500;color:var(--vinho);padding:8px 16px 16px;margin:0">'+bridge+'</p>':'<div style="height:12px"></div>')+
+  '</div>';
+}
+function insightCor(cor){
+  if(cor===1){ // avermelhada
+    return insightCard('Por que as suas manchas são avermelhadas','A sua marca ainda está no começo.',
+      skinDiagram('epi','#c0392b'),
+      'O tom avermelhado é sinal de inflamação ainda ativa ou recente. Nessa fase, a mancha ainda não firmou o pigmento escuro. É o momento em que a sua pele mais pede cuidado, porque é agora que se decide se ela vira mancha marrom ou não.',
+      'Agir agora é o que muda o rumo. E pra isso, a sua pele precisa de um cuidado feito pra ela.');
+  }
+  if(cor===2){ // acinzentada
+    return insightCard('Por que as suas manchas são acinzentadas','O seu pigmento está numa camada mais funda.',
+      skinDiagram('derm','#7a8a9a'),
+      'O tom acinzentado ou azulado indica que o pigmento desceu pra derme, uma camada mais profunda da pele. Isso costuma acontecer quando a inflamação foi intensa ou se repetiu muitas vezes. Por estar mais fundo, esse tipo de mancha responde de forma diferente.',
+      'Justamente por ser mais profundo, é o tipo que mais pede um cuidado específico e constante.');
+  }
+  if(cor===3){ // misto
+    return insightCard('Por que você tem manchas de tipos diferentes','A sua pele tem marcas de fases diferentes.',
+      skinDiagram('both'),
+      'Ter mais de um tom quer dizer que a sua pele marca há um tempo: umas manchas ficaram na superfície, outras desceram mais fundo. É o retrato de uma pele que passou por vários ciclos de inflamação sem que eles fossem interrompidos.',
+      'Por isso o cuidado precisa trabalhar em mais de uma frente, e ser feito pra pele negra.');
+  }
+  // marrom (0) e default
+  return insightCard('Por que as suas manchas são marrons','A sua pele se defende produzindo pigmento.',
+    skinDiagram('epi'),
+    'A pele negra tem mais melanina, e um pigmento naturalmente amarronzado. Quando inflama, seja espinha, atrito ou depilação, ela produz ainda mais como defesa. É a <b>hiperpigmentação pós-inflamatória</b>, a marca mais comum na pele negra.',
+    'E é por isso que a sua pele precisa de um cuidado feito especificamente pra ela.');
+}
+function insightGatilho(r1){
+  var temDepil=(r1&&r1.indexOf(0)>=0);
+  var abre=temDepil?'Você marcou <b>depilação</b> como algo que deixa marca. Isso confirma: a sua pele não reage só a espinha. ':'';
+  return insightCard('Por que qualquer coisa te marca','Na sua pele, inflamar é pigmentar.','',
+    abre+'Toda inflamação, seja espinha, atrito ou depilação, ativa os melanócitos a produzir melanina. O que em outra pele seria só vermelhidão, na sua vira mancha.',
+    'Não é sensibilidade exagerada. É reatividade, e ela tem mecanismo.');
+}
+function dicasPele(r1,k2){
+  var temDepil=(r1&&r1.indexOf(0)>=0);
+  var usouAcido=(k2&&k2.indexOf(1)>=0);
+  function d(t){return '<div style="display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--line)"><div style="width:28px;height:28px;border-radius:50%;background:rgba(244,99,58,.12);flex:0 0 28px;display:flex;align-items:center;justify-content:center;color:var(--terracota);font-size:.8rem">◍</div><div style="font-size:.88rem;line-height:1.45;color:rgba(98,21,19,.8);font-weight:300">'+t+'</div></div>';}
+  var out='<div style="font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.25rem;color:var(--vinho);margin:0 0 4px">O que combina com a sua pele</div>'+
+    '<div style="font-size:.88rem;font-weight:300;color:rgba(98,21,19,.6);margin:0 0 14px">Cuidados simples que ajudam a manter a pele mais calma.</div>';
+  out+=d('<b>Limpeza suave.</b> Evite sabonetes que deixam a pele repuxada. Barreira ressecada reage mais.');
+  out+=d('<b>Prefira sem fragrância.</b> A fragrância pode irritar peles sensíveis e favorecer espinhas.');
+  out+=d('<b>Cuidado com o excesso de ácidos.</b> Ativos como o glicólico, em concentração alta'+(usouAcido?', como você já usou,':'')+' podem irritar a pele negra, e é a irritação que gera mais mancha.');
+  if(temDepil){ out+=d('<b>Na depilação, hidrate depois.</b> Principalmente virilha e axilas. Espuma de depilação ajuda a lâmina a deslizar e reduz a irritação.'); }
+  out+=d('<b>Não mexa nas manchas.</b> Cutucar prolonga a inflamação, e é a inflamação que gera mais mancha.');
+  out+=d('<b>Protetor solar todo dia.</b> O sol intensifica as manchas que você já tem, mesmo na pele negra.');
+  return out;
+}
+function pontEubeDipalmitato(){
+  return '<div style="background:var(--vinho);padding:22px 18px;margin:22px 0">'+
+    '<p style="font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.3rem;line-height:1.16;color:var(--offwhite);margin:0 0 16px">A EUBE foi criada pra pele que o mercado sempre ignorou.</p>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:rgba(237,235,220,.15);margin:0 0 14px">'+
+      '<div style="background:var(--vinho);padding:14px 12px"><p style="font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:rgba(237,235,220,.5);margin:0 0 7px">O mercado faz</p><p style="font-size:.82rem;line-height:1.4;font-weight:300;color:rgba(237,235,220,.55);margin:0">Fórmulas genéricas que não consideram as necessidades da pele negra.</p></div>'+
+      '<div style="background:var(--vinho);padding:14px 12px"><p style="font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--terracota);margin:0 0 7px">A EUBE faz</p><p style="font-size:.82rem;line-height:1.4;font-weight:300;color:var(--offwhite);margin:0">Fórmula criada do zero, a partir da pele negra.</p></div>'+
+    '</div>'+
+    '<p style="font-size:.88rem;line-height:1.5;color:rgba(237,235,220,.82);font-weight:300;margin:0">Formulamos com ativos escolhidos pra essa sensibilidade, como o <b style="color:var(--terracota);font-weight:600">ácido kójico dipalmitato</b>, uma forma mais estável. Não é adaptação. É <b style="color:var(--terracota);font-weight:600">origem</b>.</p>'+
+  '</div>';
+}
+
 function renderResult2(s,pi,P,f,ctaLabel){
   var rad=76,circ=2*Math.PI*rad;
   var prodSection='';
@@ -1138,15 +1227,22 @@ function renderResult2(s,pi,P,f,ctaLabel){
 
     DIV+
 
-    // ── BLOCO 1 · por que acontece (erro + fisiologia + ciclo + cards) ──
-    blocoPorque(f,pi)+
+    // ── BLOCO 1 · insights personalizados por resposta ──
+    '<p style="font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--terracota);display:flex;align-items:center;gap:8px;margin:0 0 8px"><span style="width:20px;height:20px;border-radius:50%;background:var(--terracota);color:var(--offwhite);display:flex;align-items:center;justify-content:center;font-size:.66rem;flex:0 0 20px">1</span>Por que a sua pele faz isso</p>'+
+    '<p style="font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.5rem;line-height:1.15;color:var(--vinho);margin:0 0 18px">O que as suas respostas revelam.</p>'+
+    insightCor(state.answers.cor)+
+    insightGatilho(state.answers.r1)+
     cicloPerfil(pi)+
-    blocoFisio()+
 
     DIV+
 
-    // ── BLOCO 2 · solução (EUBE origem + produtos + fecho) ──
-    eubeSec()+
+    // ── dicas personalizadas ──
+    dicasPele(state.answers.r1,state.answers.k2)+
+
+    // ── ponte EUBE ──
+    pontEubeDipalmitato()+
+
+    // ── BLOCO 2 · solução (produtos + fecho) ──
     prodSection+
     fechoUnico()+
 
@@ -1191,6 +1287,15 @@ function logResult(){
   var s=scores();
   var FLAB=["acne ativa","transição","mancha antiga","prevenção"];
   var corLab=["marrom","avermelhada","acinzentada","misto"];
+
+  // avisa a página-mãe (Shopify) que o quiz foi concluído, pra a pop-up não reaparecer
+  try{
+    if(window.parent && window.parent!==window){
+      window.parent.postMessage({eube:"quiz_completo"},"*");
+    }
+    // marca local também (caso o quiz seja aberto direto, fora do iframe)
+    try{ localStorage.setItem("eube_quiz_feito","1"); }catch(e){}
+  }catch(e){}
 
   var respostas={};
   ["k1","k2","k3","r1","r2","m1","cor","m2","c1","c2","h1","fase"].forEach(function(id){
