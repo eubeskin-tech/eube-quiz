@@ -617,7 +617,7 @@ var EUBE_URL={
 var EUBE_FOTOS=[
   {nome:'Thayanne', src:'images/EUBE_thayanne.webp'},
   {nome:'Ester',    src:'images/EUBE_ester.webp'},
-  {nome:'Milena',   src:'images/EUBE_milena.webp'}
+  {nome:'Milena',   src:'images/EUBE_milena.webp', vertical:true}
 ];
 
 var EUBE_ETAPAS=[
@@ -698,13 +698,26 @@ var E2AREAS='<p style="font-size:.6rem;letter-spacing:.16em;text-transform:upper
 function e2Fotos(){
   return '<p style="font-family:Sulphur Point,sans-serif;font-weight:700;font-size:1.25rem;line-height:1.25;color:var(--vinho);margin:22px 0 14px">Veja os resultados de pessoas negras como você</p>'+
     EUBE_FOTOS.map(function(f){
-      return '<div style="background:#fff;padding:12px;margin-bottom:10px">'+
-        '<img src="'+f.src+'" alt="Antes e depois — '+f.nome+'" width="1080" height="675" loading="lazy" decoding="async" style="width:100%;height:auto;aspect-ratio:8/5;object-fit:cover;display:block">'+
+      var img='<img src="'+f.src+'" alt="Antes e depois — '+f.nome+'" width="720" height="1152" loading="lazy" decoding="async" style="width:100%;height:auto;display:block">';
+      var corpo;
+      if(f.vertical){
+        // composicao empilhada: antes em cima, depois embaixo
+        corpo='<div style="position:relative">'+img+
+          '<span style="position:absolute;top:8px;left:8px;background:rgba(237,235,220,.92);color:var(--vinho);font-size:.66rem;letter-spacing:.08em;padding:3px 8px">antes</span>'+
+          '<span style="position:absolute;bottom:8px;left:8px;background:var(--vinho);color:var(--offwhite);font-size:.66rem;letter-spacing:.08em;padding:3px 8px">depois</span>'+
+        '</div>'+
+        '<p style="text-align:center;font-size:.95rem;font-weight:600;color:var(--vinho);margin:8px 0 0">'+f.nome+'</p>';
+      } else {
+        // composicao lado a lado: antes a esquerda, depois a direita
+        corpo=img+
         '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:8px">'+
           '<span style="font-size:.7rem;color:var(--muted)">antes</span>'+
           '<b style="font-size:.95rem;color:var(--vinho)">'+f.nome+'</b>'+
           '<span style="font-size:.7rem;color:var(--muted)">depois</span>'+
-        '</div></div>';
+        '</div>';
+      }
+      return '<div style="background:#fff;padding:12px;margin-bottom:10px">'+
+        '<div style="max-width:360px;margin:0 auto">'+corpo+'</div></div>';
     }).join('')+
     '<p style="font-size:.68rem;line-height:1.5;text-align:center;color:var(--muted);margin:10px 0 0">Resultados individuais. Fotos sem filtro, publicadas com autorização.</p>';
 }
